@@ -3,10 +3,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import { Button, Input, Form, FormItem } from 'element-ui';
+
+Vue.use(Button)
+Vue.use(Input);
+Vue.use(Form);
+Vue.use(FormItem);
+
+
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')

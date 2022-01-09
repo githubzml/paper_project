@@ -1,19 +1,12 @@
-# paper_project
+# 论文项目
 
-## Project setup
-```
-yarn install
-```
+Vue UI组件库 ElementUI
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+论文观点来源:
+论文基本观点:
+论文主要内容:
+主要参考资料:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+业务仿咸鱼 转转 
+风格仿京东
