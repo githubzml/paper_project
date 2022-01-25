@@ -10,21 +10,58 @@
       <div class="right">
         <div class="login_form">
           <div class="login_form_box">
-            <h1>账号密码登录</h1>
+            <h1>省钱易</h1>
+            <el-form
+              ref="form"
+              :model="form"
+              label-width="80px"
+              :label-position="labelPosition"
+            >
+              <el-form-item label="邮箱" class="_item">
+                <el-input
+                  v-model="phoneNumber"
+                  placeholder="请输入邮箱"
+                ></el-input>
 
-            <el-form ref="form" :model="form" label-width="80px">
-              <el-input
-                v-model="phoneNumber"
-                placeholder="请输入手机号码"
-              ></el-input>
-              <el-input
-                v-model="loginPassword"
-                placeholder="请输入登录密码"
-              ></el-input>
+                <div class="error_msg">邮箱格式不正确</div>
+              </el-form-item>
+
+              <el-form-item label="昵称">
+                <el-input
+                  v-model="loginPassword"
+                  placeholder="昵称1-10个字符"
+                ></el-input>
+              </el-form-item>
+
+              <el-form-item label="密码">
+                <el-input
+                  v-model="loginPassword"
+                  placeholder="密码1-16个字符"
+                ></el-input>
+              </el-form-item>
+
+              <el-form-item label="验证码">
+                <el-input
+                  v-model="loginPassword"
+                  placeholder="请输入六位验证码"
+                  style="width: 150px"
+                ></el-input>
+                <el-button
+                  @click="getCode"
+                  :disabled="isDisabled"
+                  type="info"
+                  style="margin-left: 10px; width: 140px"
+                  >{{ txt }}</el-button
+                >
+              </el-form-item>
 
               <el-form-item>
-                <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                <el-button type="primary" @click="onSubmit" style="width: 100%"
+                  >注册</el-button
+                >
               </el-form-item>
+
+              <p class="tip">已有账号，立即登录</p>
             </el-form>
           </div>
         </div>
@@ -45,6 +82,8 @@
 // import axios from "axios";
 // 第二种方式 接口统一管理
 import { testData, register, login } from "@/api";
+
+import ValidForm from "@/utils";
 
 export default {
   name: "Login",
@@ -76,6 +115,9 @@ export default {
         resource: "",
         desc: "",
       },
+      labelPosition: "left", //label位置
+      txt: "发送邮箱验证码", //验证码按钮文字内容
+      isDisabled: false, //是否禁用
     };
   },
   mounted() {
@@ -98,6 +140,22 @@ export default {
       this.$router.push("/home");
     },
     onSubmit() {},
+    getCode() {
+      this.isDisabled = true; // 禁止不间断点击
+      let time = 5; //开启定时器
+      this.txt = `${time}s后重新发送`;
+      let timer = setInterval(() => {
+        if (time == 0) {
+          clearInterval(timer);
+          this.txt = `发送邮箱验证码`;
+          time = 5;
+          this.isDisabled = false;
+        } else {
+          time--;
+          this.txt = `${time}s后重新发送`;
+        }
+      }, 1000);
+    },
   },
 };
 </script>
@@ -130,30 +188,43 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    height: calc(~"100% - 140px");
+    height: calc(~"100% - 120px");
     .left {
       width: 100%;
       height: 400px;
-      background: url("../../assets/images/login/社区.jpg") center center
-        no-repeat;
+      // background: url("~@/assets/images/login/社区.jpg") center center no-repeat;
       background-size: cover;
     }
     .right {
       position: absolute;
       right: 0;
-      top: 0;
+      top: 20%;
+      background: #53c9c9;
+      border-radius: 10px;
       .login_form {
-        width: 440px;
-        height: 400px;
-        background-color: #fff;
+        width: 400px;
         opacity: 0.9;
         .login_form_box {
-          // margin: 73px 40px 67px;
+          padding: 20px 10px 0 10px;
           h1 {
             font-size: 22px;
             margin-bottom: 20px;
             text-align: center;
           }
+          ._item {
+            position: relative;
+            .error_msg {
+              position: absolute;
+              top: 32px;
+              left: 0;
+
+              color: #e4393c;
+            }
+          }
+        }
+        .tip {
+          text-align: right;
+          padding-bottom: 10px;
         }
       }
     }
