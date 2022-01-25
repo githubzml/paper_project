@@ -17,6 +17,7 @@
         "@vue/cli-plugin-router": "~4.5.0",
         "@vue/cli-plugin-vuex": "~4.5.0",
         "@vue/cli-service": "~4.5.0",
+        "axios": "^0.25.0",
         "babel-plugin-component": "^1.1.1",
         "element-ui": "^2.15.6",
         "less": "^3.0.4",

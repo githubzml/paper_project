@@ -41,6 +41,11 @@
 </template>
 
 <script>
+// 第一种方式
+// import axios from "axios";
+// 第二种方式 接口统一管理
+import { testData, register, login } from "@/api";
+
 export default {
   name: "Login",
   data() {
@@ -61,12 +66,38 @@ export default {
         " 京东公益 ",
       ],
       copy: "Copyright © 2004-2022  SQ.com 版权所有",
+      form: {
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: "",
+      },
     };
+  },
+  mounted() {
+    testData().then((res) => {
+      console.log("res", res);
+    });
+    // axios.get("/api/testData").then((res) => {
+    //   console.log("res", res);
+    // });
+    // register({ id: 10, name: "Kk" }).then((res) => {
+    //   console.log("res", res);
+    // });
+
+    // login({ username: "mark", password: "a123456" }).then((res) => {
+    //   console.log("res", res);
+    // });
   },
   methods: {
     goHome() {
       this.$router.push("/home");
     },
+    onSubmit() {},
   },
 };
 </script>
