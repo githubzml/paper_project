@@ -15,4 +15,9 @@ export let register = (params) => instance.post("/register", params);
 // 2.获取邮箱验证
 export let code = (params) => instance.post("/code", params);
 
+// 3.登录
+export let login = (params) => instance.post("/login", params);
+
+// 4.用户信息
+export let userinfo = (params) => instance.post("/userInfo", params);
 

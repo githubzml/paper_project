@@ -8,7 +8,8 @@
     <main>
       <div class="left"></div>
       <div class="right">
-        <div class="login_form">
+        <!-- 注册 -->
+        <div class="_form" v-if="registerStates">
           <div class="login_form_box">
             <h1>省钱易</h1>
             <el-form
@@ -74,12 +75,64 @@
               </el-form-item>
 
               <el-form-item>
-                <el-button type="primary" @click="onSubmit" style="width: 100%"
+                <el-button
+                  type="primary"
+                  @click="onRegister"
+                  style="width: 100%"
                   >注册</el-button
                 >
               </el-form-item>
+              <p class="tip" @click="registerStates = false">
+                已有账号，立即登录
+              </p>
+            </el-form>
+          </div>
+        </div>
+        <!-- 登录 -->
+        <div class="_form" v-else>
+          <div class="login_form_box">
+            <h1>省钱易</h1>
+            <el-form
+              ref="form"
+              :model="form"
+              label-width="80px"
+              :label-position="labelPosition"
+            >
+              <el-form-item label="邮箱" class="_item">
+                <el-input
+                  v-model="form.email"
+                  placeholder="请输入邮箱"
+                  @blur="blur_handle_email"
+                ></el-input>
 
-              <p class="tip">已有账号，立即登录</p>
+                <div class="error_msg" v-show="emailTipShow">
+                  邮箱格式不正确
+                </div>
+              </el-form-item>
+
+              <el-form-item label="密码" class="_item">
+                <el-input
+                  v-model="form.password"
+                  placeholder="密码1-16个字符"
+                  show-password
+                  @blur="blur_handle_password"
+                ></el-input>
+
+                <div class="error_msg" v-show="passwordTipShow">
+                  6-16字符，数字字母下滑线组合且首字符为字母
+                </div>
+              </el-form-item>
+
+              <el-form-item>
+                <el-button type="primary" @click="onLogin" style="width: 100%"
+                  >登录</el-button
+                >
+              </el-form-item>
+
+              <p class="tip a_login">
+                <span @click="registerStates = true">没有账号，立即注册</span
+                ><span>忘记密码?</span>
+              </p>
             </el-form>
           </div>
         </div>
@@ -104,7 +157,7 @@ import { login, testData, register, code } from "@/api";
 import ValidForm from "@/utils";
 
 export default {
-  name: "Login",
+  name: "Register",
   data() {
     return {
       links: [
@@ -134,6 +187,8 @@ export default {
       nicknameTipShow: false,
       passwordTipShow: false,
       codeTipShow: false,
+
+      registerStates: true,
     };
   },
   mounted() {
@@ -211,9 +266,9 @@ export default {
         this.codeTipShow = false;
       }
     },
-    onSubmit() {
+    onRegister() {
       let isEmpty = false;
-      //判断是否有空
+      //判断是否有空 检查表单是否填写完整
       for (let key in this.form) {
         if (!this.form[key]) {
           isEmpty = true;
@@ -235,10 +290,41 @@ export default {
         alert("请正确填写表单信息");
         return;
       }
-      console.log("注册成功 发起请求", this.form);
       register(this.form).then((res) => {
-        console.log("res123", res);
+        let { code, msg } = res.data;
+        if (code == 1) {
+          this.registerStates = false;
+          for (let key in this.form) {
+            this.form[key] = "";
+          }
+        } else {
+          alert(msg);
+        }
       });
+    },
+
+    onLogin() {
+      if (!this.form.email || !this.form.password) {
+        alert("请完善表单信息");
+        return;
+      }
+
+      if (this.emailTipShow || this.passwordTipShow) {
+        alert("请正确填写表单信息");
+        return;
+      }
+
+      login({ email: this.form.email, password: this.form.password }).then(
+        (res) => {
+          let { code, msg, token } = res.data;
+          if (code == 1) {
+            sessionStorage.setItem("_tk", token);
+            this.$router.push({ name: "Home" });
+          } else {
+            alert(msg);
+          }
+        }
+      );
     },
   },
 };
@@ -285,7 +371,7 @@ export default {
       top: 20%;
       background: #53c9c9;
       border-radius: 10px;
-      .login_form {
+      ._form {
         width: 400px;
         opacity: 0.9;
         .login_form_box {
@@ -309,6 +395,10 @@ export default {
         .tip {
           text-align: right;
           padding-bottom: 10px;
+        }
+        .a_login {
+          display: flex;
+          justify-content: space-between;
         }
       }
     }
