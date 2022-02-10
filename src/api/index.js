@@ -20,4 +20,5 @@ export let login = (params) => instance.post("/login", params);
 
 // 4.用户信息
 export let userinfo = (params) => instance.post("/userInfo", params);
-
+// 5.添加商品类型
+export let addType = (params) => instance.post("/addType", params);

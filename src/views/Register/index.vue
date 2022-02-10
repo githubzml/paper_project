@@ -395,6 +395,7 @@ export default {
         .tip {
           text-align: right;
           padding-bottom: 10px;
+          cursor: pointer;
         }
         .a_login {
           display: flex;
