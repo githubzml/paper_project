@@ -22,3 +22,5 @@ export let login = (params) => instance.post("/login", params);
 export let userinfo = (params) => instance.post("/userInfo", params);
 // 5.添加商品类型
 export let addType = (params) => instance.post("/addType", params);
+// 6.获取商品数据类型
+export let findTypeDate = (params) => instance.get("/findTypeDate", { params });

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <div class="wrapper">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -13,6 +15,10 @@ body {
     width: calc(~"100% - 40px");
     height: calc(~"100% - 40px");
     padding: 20px;
+    .wrapper {
+      height: 100%;
+      padding: 0 100px;
+    }
   }
 }
 </style>

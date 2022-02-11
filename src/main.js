@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import "swiper/css/swiper.css";
 import "@/style/change.less"
 
 import { Button, Input, Form, FormItem, Dialog } from 'element-ui';
