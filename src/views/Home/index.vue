@@ -1,16 +1,12 @@
 <template>
   <div class="_home">
     <header>
+      <!-- 省钱易 好逛好玩 -->
       <ul>
-        <li>省钱易欢迎您！</li>
+        <li>省钱易，好逛又好玩</li>
         <li class="_head">
           {{ userMsg.nickName }} <img :src="userMsg.headImg" alt="" />
-        </li>
-        <li>退出登录</li>
-      </ul>
-      <ul @click="navClick">
-        <li v-for="(item, index) in navList" :index="index" :data-id="item.id">
-          {{ item.bc }}
+          <span>退出登录</span>
         </li>
       </ul>
     </header>
@@ -19,6 +15,13 @@
       <li>
         <i class="iconfont icon-gouwucheman"></i>
         <span>省钱易</span>
+      </li>
+      <li class="_nav fzb">
+        <span>首页</span>
+        <span>商品清单</span>
+        <span>网站公告</span>
+        <span>关于我们</span>
+        <span>爱心公益</span>
       </li>
       <li>
         <el-input
@@ -31,38 +34,51 @@
     </ul>
 
     <main>
-      <div class="type-nav">
-        <div class="container">
-          <!-- 事件委派|事件委托 -->
-          <div>
-            <h2 class="all">全部商品分类</h2>
-            <!-- 过渡动画 -->
-            <transition name="sort">
-              <!-- 三级联动 -->
-              <div class="sort">
-                <!-- 利用事件委派+编程式导航实现路由的跳转与传递参数 -->
-                <div class="all-sort-list2"></div>
-              </div>
-            </transition>
-          </div>
-          <nav class="nav">
-            <a href="###">服装城</a>
-            <a href="###">美妆馆</a>
-            <a href="###">尚品汇超市</a>
-            <a href="###">全球购</a>
-            <a href="###">闪购</a>
-            <a href="###">团购</a>
-            <a href="###">有趣</a>
-            <a href="###">秒杀</a>
-          </nav>
+      <section class="left">
+        <div class="left_top">
+          <h1 class="_title fzb">类别</h1>
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox
+              v-for="(item, index) in labelList"
+              :label="item.type"
+            ></el-checkbox>
+          </el-checkbox-group>
         </div>
-      </div>
-
-      <ListContainer />
+        <div class="left_bottom"></div>
+      </section>
+      <section class="right">
+        <div class="right_top">
+          <div>
+            <span class="fzb">价格</span>
+            <el-select v-model="value" clearable placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <div>
+            <span class="fzb">区域</span>
+            <el-select v-model="value" clearable placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="right_bottom"></div>
+      </section>
     </main>
-    <el-button type="info" @click="infoBtn">信息按钮</el-button>
+    <el-button type="info" @click="infoBtn">发布按钮</el-button>
     <!-- 弹框 -->
-    <el-dialog title="添加商品类型" :visible.sync="dialogFormVisible">
+    <el-dialog title="发布商品类型" :visible.sync="dialogFormVisible">
       <el-form :model="commodityForm">
         <el-form-item label="商品类型" :label-width="formLabelWidth">
           <el-input
@@ -76,12 +92,65 @@
         <el-button type="primary" @click="dialogSure">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-button type="info" @click="clickPay">支付</el-button>
+
+    <el-button type="info" @click="productBtn">商品发布</el-button>
+
+    <el-dialog title="发布商品" :visible.sync="dialogFormVisible2">
+      <el-form :model="form2">
+        <el-form-item label="商品名称" :label-width="formLabelWidth2">
+          <el-input v-model="form2.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="商品类型" :label-width="formLabelWidth2">
+          <el-select v-model="form2.aType" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商品价格" :label-width="formLabelWidth2">
+          <el-input v-model="form2.price" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <div class="_product">
+          <span>商品图片</span>
+          <label class="_product_img">
+            <span>上传图片</span>
+            <input type="file" class="file_box" />
+          </label>
+        </div>
+
+        <div class="_product _product_detail">
+          <span>商品详情图片</span>
+          <label class="_product_img">
+            <span>上传图片</span>
+            <input type="file" class="file_box" />
+          </label>
+        </div>
+
+        <el-form-item label="商品描述" :label-width="formLabelWidth2">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="form2.desc"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogFormVisible2 = false"
+          >确 定 发 布</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { userinfo, addType, findTypeDate } from "@/api";
+import { userinfo, addType, findTypeDate, startPay } from "@/api";
 import ListContainer from "./ListContainer";
+import moment from "moment";
 export default {
   name: "Home",
   components: {
@@ -129,6 +198,79 @@ export default {
       formLabelWidth: "120px",
       token: "",
       searchContent: "",
+
+      // 复选框
+      labelList: [
+        { id: 0, type: "全部" },
+        {
+          id: 1,
+          type: "数码",
+        },
+
+        {
+          id: 2,
+          type: "书籍",
+        },
+
+        {
+          id: 3,
+          type: "生活用品",
+        },
+
+        {
+          id: 4,
+          type: "服饰",
+        },
+
+        {
+          id: 5,
+          type: "美妆",
+        },
+
+        {
+          id: 6,
+          type: "出行",
+        },
+
+        {
+          id: 7,
+          type: "其他",
+        },
+      ],
+      checkList: ["全部"],
+      // 下拉框
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕",
+        },
+        {
+          value: "选项2",
+          label: "双皮奶",
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎",
+        },
+        {
+          value: "选项4",
+          label: "龙须面",
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭",
+        },
+      ],
+      value: "",
+      dialogFormVisible: false,
+      dialogFormVisible2: false,
+      form2: {
+        name: "",
+        aType: "",
+        price: "",
+        desc: "",
+      },
+      formLabelWidth2: "120px",
     };
   },
   mounted() {
@@ -140,14 +282,9 @@ export default {
       return;
     }
 
-    // 每次查询几条数据
-    let count = 3; //拿几条数据
-    let offset = 0; //偏移量
+    // 初始查询
+    this.searchClick();
 
-    // 获取商品类型数据
-    findTypeDate({ token: this.token, count, offset }).then((res) => {
-      console.log("res", res.data);
-    });
     // validLogin
     userinfo({ token: this.token }).then((res) => {
       let { code, msg, result } = res.data;
@@ -201,22 +338,71 @@ export default {
       });
     },
     // 搜索
-    searchClick() {},
+    searchClick() {
+      // 每次查询几条数据
+      let count = 10; //拿几条数据
+      let offset = 0; //偏移量
+
+      // 获取商品类型数据
+      findTypeDate({
+        token: this.token,
+        count,
+        offset,
+        typeName: this.searchContent,
+      }).then((res) => {
+        let { code, result } = res.data;
+        if (code == 200) {
+          let arr = [];
+          result.forEach((element) => {
+            element.created_at = moment(element.created_at).format(
+              "YYYY-MM-DD,HH:mm:ss"
+            );
+            element.updated_at = moment(element.updated_at).format(
+              "YYYY-MM-DD,HH:mm:ss"
+            );
+
+            arr.push(element);
+          });
+          console.log("arr", arr);
+        } else {
+        }
+        console.log("res2", res.data);
+      });
+    },
+    // 支付
+    clickPay() {
+      startPay().then((res) => {
+        console.log(res.data);
+        if (res.data.code == 200) {
+          location.href = res.data.paymentUrl;
+        }
+      });
+    },
+    // 商品发布
+    productBtn() {
+      this.dialogFormVisible2 = true;
+    },
   },
 };
 </script>
 
 <style scoped lang="less">
 ._home {
+  // 控制部分字体大小
+  .fzb {
+    font-size: 20px;
+    font-weight: bold;
+  }
   // 导航
   header {
     display: flex;
-    justify-content: space-between;
-    background-color: #eaeaea;
     ul {
-      height: 30px;
+      width: 100%;
+      height: 40px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eaeaea;
       li {
         margin-right: 20px;
       }
@@ -236,7 +422,7 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 20px 0;
-    padding-left: 100px;
+    padding-left: 30px;
     li {
       display: flex;
       align-items: center;
@@ -248,7 +434,14 @@ export default {
     li:nth-of-type(1) {
     }
 
-    li:nth-of-type(2) {
+    ._nav {
+      span {
+        padding: 0 20px;
+        cursor: pointer;
+      }
+    }
+
+    li:nth-of-type(3) {
       .el-input {
         width: 490px;
         height: 40px;
@@ -266,137 +459,57 @@ export default {
   }
 
   main {
-    .type-nav {
-      border-bottom: 2px solid #e1251b;
-
-      .container {
-        width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        position: relative;
-
-        .all {
-          width: 210px;
-          height: 45px;
-          background-color: #e1251b;
-          line-height: 45px;
-          text-align: center;
-          color: #fff;
-          font-size: 14px;
-          font-weight: bold;
+    display: flex;
+    .left {
+      padding-left: 2%;
+      width: 18%;
+      border: 1px solid red;
+      .left_top {
+        ._title {
+          margin: 10px 0;
         }
-
-        .nav {
-          a {
-            height: 45px;
-            margin: 0 22px;
-            line-height: 45px;
-            font-size: 16px;
-            color: #333;
+        .el-checkbox-group {
+          display: flex;
+          flex-direction: column;
+          .el-checkbox {
+            line-height: 30px;
           }
-        }
-
-        .sort {
-          position: absolute;
-          left: 0;
-          top: 45px;
-          width: 210px;
-          height: 461px;
-          position: absolute;
-          background: #fafafa;
-          z-index: 999;
-
-          .all-sort-list2 {
-            .item {
-              h3 {
-                line-height: 30px;
-                font-size: 14px;
-                font-weight: 400;
-                overflow: hidden;
-                padding: 0 20px;
-                margin: 0;
-
-                a {
-                  color: #333;
-                }
-              }
-
-              .item-list {
-                display: none;
-                position: absolute;
-                width: 734px;
-                min-height: 460px;
-                background: #f7f7f7;
-                left: 210px;
-                border: 1px solid #ddd;
-                top: 0;
-                z-index: 9999 !important;
-
-                .subitem {
-                  float: left;
-                  width: 650px;
-                  padding: 0 4px 0 8px;
-
-                  dl {
-                    border-top: 1px solid #eee;
-                    padding: 6px 0;
-                    overflow: hidden;
-                    zoom: 1;
-
-                    &.fore {
-                      border-top: 0;
-                    }
-
-                    dt {
-                      float: left;
-                      width: 54px;
-                      line-height: 22px;
-                      text-align: right;
-                      padding: 3px 6px 0 0;
-                      font-weight: 700;
-                    }
-
-                    dd {
-                      float: left;
-                      width: 415px;
-                      padding: 3px 0 0;
-                      overflow: hidden;
-
-                      em {
-                        float: left;
-                        height: 14px;
-                        line-height: 14px;
-                        padding: 0 8px;
-                        margin-top: 5px;
-                        border-left: 1px solid #ccc;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            .cur {
-              background: skyblue;
-            }
-          }
-        }
-        // 过渡动画的样式
-        // 进入的开始状态
-        .sort-enter {
-          height: 0px;
-          // transform: rotate3d(); // 过渡动画
-        }
-        // 进入的结束状态
-        .sort-enter-to {
-          height: 461px;
-          // transform: rotate3d(); // 过渡动画
-        }
-        // 定义动画时间，速率
-        .sort-enter-active {
-          transition: all 0.5s linear;
         }
       }
     }
+    .right {
+      width: 80%;
+      border: 1px solid blue;
+      .right_top {
+        display: flex;
+        > div {
+          margin: 10px;
+        }
+      }
+    }
+  }
+  ._product {
+    display: flex;
+    margin-bottom: 22px;
+    > span {
+      width: 108px;
+      font-size: 18px;
+      text-align: right;
+      padding-right: 12px;
+    }
+    ._product_img {
+      width: 140px;
+      height: 140px;
+      text-align: center;
+      line-height: 140px;
+      border: 1px solid #ddd;
+      color: #999;
+      .file_box {
+        display: none;
+      }
+    }
+  }
+  ._product_detail {
   }
 }
 </style>

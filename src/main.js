@@ -5,7 +5,7 @@ import store from './store'
 import "swiper/css/swiper.css";
 import "@/style/change.less"
 
-import { Button, Input, Form, FormItem, Dialog } from 'element-ui';
+import { Button, Input, Form, FormItem, Dialog, CheckboxGroup, Checkbox, Select, Option } from 'element-ui';
 
 Vue.use(Button)
 Vue.use(Input);
@@ -13,6 +13,16 @@ Vue.use(Form);
 Vue.use(FormItem);
 
 Vue.use(Dialog);
+
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+
+Vue.use(Select);
+Vue.use(Option);
+
+
+
+
 
 
 

@@ -24,3 +24,7 @@ export let userinfo = (params) => instance.post("/userInfo", params);
 export let addType = (params) => instance.post("/addType", params);
 // 6.获取商品数据类型
 export let findTypeDate = (params) => instance.get("/findTypeDate", { params });
+
+export let startPay = (params) => instance.post("/startPay", params);
+
+
