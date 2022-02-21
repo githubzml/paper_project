@@ -102,10 +102,14 @@
         <el-form-item label="商品名称" :label-width="formLabelWidth2">
           <el-input v-model="form2.name" autocomplete="off"></el-input>
         </el-form-item>
+
         <el-form-item label="商品类型" :label-width="formLabelWidth2">
-          <el-select v-model="form2.aType" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select v-model="form2.aType" placeholder="请选择商品类型">
+            <el-option
+              v-for="(item, index) in ccc"
+              :label="item.typeName"
+              :value="item.typeName"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="商品价格" :label-width="formLabelWidth2">
@@ -116,7 +120,15 @@
           <span>商品图片</span>
           <label class="_product_img">
             <span>上传图片</span>
-            <input type="file" class="file_box" />
+            <input
+              type="file"
+              class="file_box"
+              @change="previewFile(1)"
+              ref="s1"
+            />
+            <div class="img_pic">
+              <img src="" alt="" ref="pic1" />
+            </div>
           </label>
         </div>
 
@@ -124,7 +136,16 @@
           <span>商品详情图片</span>
           <label class="_product_img">
             <span>上传图片</span>
-            <input type="file" class="file_box" />
+
+            <input
+              type="file"
+              class="file_box"
+              @change="previewFile(2)"
+              ref="s2"
+            />
+            <div class="img_pic">
+              <img src="" alt="" ref="pic2" />
+            </div>
           </label>
         </div>
 
@@ -148,7 +169,7 @@
 </template>
 
 <script>
-import { userinfo, addType, findTypeDate, startPay } from "@/api";
+import { userinfo, addType, findTypeDate, startPay, typeAll } from "@/api";
 import ListContainer from "./ListContainer";
 import moment from "moment";
 export default {
@@ -271,6 +292,7 @@ export default {
         desc: "",
       },
       formLabelWidth2: "120px",
+      ccc: [],
     };
   },
   mounted() {
@@ -381,6 +403,43 @@ export default {
     // 商品发布
     productBtn() {
       this.dialogFormVisible2 = true;
+      // 获取商品类型
+      typeAll({ token: this.token }).then((res) => {
+        let { code, msg, result } = res.data;
+        if (code == 200) {
+          this.ccc = result;
+        } else {
+          alert(msg);
+        }
+      });
+    },
+
+    previewFile(p) {
+      let file = null;
+      let that = this;
+
+      if (p == 1) {
+        file = this.$refs.s1.files[0];
+      } else {
+        file = this.$refs.s2.files[0];
+      }
+
+      // 获取图片base64
+      let fileReader = new FileReader();
+
+      // 监听是否读取完毕
+      fileReader.onload = function () {
+        let base64 = this.result;
+        if (p == 1) {
+          that.$refs.pic1.setAttribute("src", base64);
+        } else {
+          that.$refs.pic2.setAttribute("src", base64);
+        }
+      };
+
+      if (file) {
+        fileReader.readAsDataURL(file);
+      }
     },
   },
 };
@@ -498,6 +557,7 @@ export default {
       padding-right: 12px;
     }
     ._product_img {
+      position: relative;
       width: 140px;
       height: 140px;
       text-align: center;
@@ -506,6 +566,17 @@ export default {
       color: #999;
       .file_box {
         display: none;
+      }
+      .img_pic {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
