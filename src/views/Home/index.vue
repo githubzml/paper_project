@@ -104,11 +104,11 @@
         </el-form-item>
 
         <el-form-item label="商品类型" :label-width="formLabelWidth2">
-          <el-select v-model="form2.aType" placeholder="请选择商品类型">
+          <el-select v-model="form2.typeId" placeholder="请选择商品类型">
             <el-option
               v-for="(item, index) in ccc"
               :label="item.typeName"
-              :value="item.typeName"
+              :value="item.typeId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -127,7 +127,7 @@
               ref="s1"
             />
             <div class="img_pic">
-              <img src="" alt="" ref="pic1" />
+              <img alt="" ref="pic1" />
             </div>
           </label>
         </div>
@@ -144,7 +144,7 @@
               ref="s2"
             />
             <div class="img_pic">
-              <img src="" alt="" ref="pic2" />
+              <img alt="" ref="pic2" />
             </div>
           </label>
         </div>
@@ -160,16 +160,21 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible2 = false"
-          >确 定 发 布</el-button
-        >
+        <el-button type="primary" @click="sureClick">确 定 发 布</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { userinfo, addType, findTypeDate, startPay, typeAll } from "@/api";
+import {
+  userinfo,
+  addType,
+  findTypeDate,
+  startPay,
+  typeAll,
+  addProduct,
+} from "@/api";
 import ListContainer from "./ListContainer";
 import moment from "moment";
 export default {
@@ -287,9 +292,11 @@ export default {
       dialogFormVisible2: false,
       form2: {
         name: "",
-        aType: "",
+        typeId: "",
         price: "",
         desc: "",
+        img: "",
+        dimg: "",
       },
       formLabelWidth2: "120px",
       ccc: [],
@@ -331,7 +338,6 @@ export default {
         default:
           alert("没有绑定事件");
       }
-      console.log("event", event.target.getAttribute("data-id"));
     },
     // 商品添加
     infoBtn() {
@@ -339,8 +345,6 @@ export default {
       this.dialogFormVisible = true;
     },
     dialogSure() {
-      console.log("this.commodityForm.typeName", this.commodityForm.typeName);
-
       if (!this.commodityForm.typeName) {
         alert("请填写商品类型");
         return;
@@ -382,19 +386,15 @@ export default {
             element.updated_at = moment(element.updated_at).format(
               "YYYY-MM-DD,HH:mm:ss"
             );
-
             arr.push(element);
           });
-          console.log("arr", arr);
         } else {
         }
-        console.log("res2", res.data);
       });
     },
     // 支付
     clickPay() {
       startPay().then((res) => {
-        console.log(res.data);
         if (res.data.code == 200) {
           location.href = res.data.paymentUrl;
         }
@@ -408,12 +408,13 @@ export default {
         let { code, msg, result } = res.data;
         if (code == 200) {
           this.ccc = result;
+          console.log("this.ccc ", this.ccc);
         } else {
           alert(msg);
         }
       });
     },
-
+    // 图片上传
     previewFile(p) {
       let file = null;
       let that = this;
@@ -432,14 +433,26 @@ export default {
         let base64 = this.result;
         if (p == 1) {
           that.$refs.pic1.setAttribute("src", base64);
+          that.form2.img = base64;
         } else {
           that.$refs.pic2.setAttribute("src", base64);
+          that.form2.dimg = base64;
         }
       };
 
       if (file) {
         fileReader.readAsDataURL(file);
       }
+    },
+    // 确认发布
+    sureClick() {
+      this.dialogFormVisible2 = false;
+      let obj = Object.assign({}, { token: this.token }, this.form2);
+      addProduct(obj).then((res) => {
+        console.log("res", res.data);
+        console.log("this.form2", this.form2);
+        // 有可能请求体比较大 加上一个控制
+      });
     },
   },
 };

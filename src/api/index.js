@@ -29,3 +29,7 @@ export let startPay = (params) => instance.post("/startPay", params);
 
 // 7.获取所有商品类型
 export let typeAll = (params) => instance.get("/typeAll", { params });
+
+// 8.发布商品
+export let addProduct = (params) => instance.post("/addProduct", params);
+
