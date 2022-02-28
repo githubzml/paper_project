@@ -318,6 +318,8 @@ export default {
         (res) => {
           let { code, msg, token } = res.data;
           if (code == 1) {
+            console.log("token", token);
+
             sessionStorage.setItem("_tk", token);
             this.$router.push({ name: "Home" });
           } else {

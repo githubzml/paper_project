@@ -33,3 +33,7 @@ export let typeAll = (params) => instance.get("/typeAll", { params });
 // 8.发布商品
 export let addProduct = (params) => instance.post("/addProduct", params);
 
+// 9.修改用户头像
+export let uploadUserImg = (params) => instance.post("/uploadUserImg", params);
+
+

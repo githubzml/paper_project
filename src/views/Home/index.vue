@@ -5,8 +5,14 @@
       <ul>
         <li>省钱易，好逛又好玩</li>
         <li class="_head">
-          {{ userMsg.nickName }} <img :src="userMsg.headImg" alt="" />
-          <span>退出登录</span>
+          {{ userMsg.nickName }}
+          <p>
+            <img :src="userMsg.headImg" alt="" ref="pic0" />
+            <label class="_headimg"
+              ><input type="file" @change="updateHeadImg" ref="s0"
+            /></label>
+          </p>
+          <span @click="logOut">退出登录</span>
         </li>
       </ul>
     </header>
@@ -99,8 +105,12 @@
 
     <el-dialog title="发布商品" :visible.sync="dialogFormVisible2">
       <el-form :model="form2">
+        <el-form-item label="商品地址" :label-width="formLabelWidth2">
+          <el-input v-model="form2.place" autocomplete="off"></el-input>
+        </el-form-item>
+
         <el-form-item label="商品名称" :label-width="formLabelWidth2">
-          <el-input v-model="form2.name" autocomplete="off"></el-input>
+          <el-input v-model="form2.pname" autocomplete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="商品类型" :label-width="formLabelWidth2">
@@ -174,6 +184,7 @@ import {
   startPay,
   typeAll,
   addProduct,
+  uploadUserImg,
 } from "@/api";
 import ListContainer from "./ListContainer";
 import moment from "moment";
@@ -291,12 +302,13 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible2: false,
       form2: {
-        name: "",
+        place: "",
+        pname: "",
         typeId: "",
         price: "",
         desc: "",
-        img: "",
-        dimg: "",
+        pimg: "",
+        pdimg: "",
       },
       formLabelWidth2: "120px",
       ccc: [],
@@ -433,10 +445,10 @@ export default {
         let base64 = this.result;
         if (p == 1) {
           that.$refs.pic1.setAttribute("src", base64);
-          that.form2.img = base64;
+          that.form2.pimg = base64;
         } else {
           that.$refs.pic2.setAttribute("src", base64);
-          that.form2.dimg = base64;
+          that.form2.pdimg = base64;
         }
       };
 
@@ -453,6 +465,37 @@ export default {
         console.log("this.form2", this.form2);
         // 有可能请求体比较大 加上一个控制
       });
+    },
+    // 更换头像
+    updateHeadImg() {
+      let file = null;
+      let that = this;
+
+      file = this.$refs.s0.files[0];
+
+      // 获取图片base64
+      let fileReader = new FileReader();
+
+      // 监听是否读取完毕
+      fileReader.onload = function () {
+        let base64 = this.result;
+        that.$refs.pic0.setAttribute("src", base64);
+
+        let obj = Object.assign({}, { token: that.token }, base64);
+
+        uploadUserImg(obj).then((res) => {
+          console.log("res", res);
+        });
+      };
+
+      if (file) {
+        fileReader.readAsDataURL(file);
+      }
+    },
+    // 退出登录
+    logOut() {
+      sessionStorage.removeItem("_tk");
+      this.$router.push("/register");
     },
   },
 };
@@ -479,9 +522,26 @@ export default {
         margin-right: 20px;
       }
       ._head {
-        img {
+        display: flex;
+        align-items: center;
+        p {
+          position: relative;
           width: 30px;
           height: 30px;
+          img {
+            width: 30px;
+            height: 30px;
+          }
+          ._headimg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 30px;
+            width: 30px;
+            input {
+              display: none;
+            }
+          }
         }
       }
       li:hover {
