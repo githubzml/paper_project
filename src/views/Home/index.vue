@@ -12,6 +12,13 @@
               ><input type="file" @change="updateHeadImg" ref="s0"
             /></label>
           </p>
+          <span class="_setting"
+            >设置
+            <ol class="_ol">
+              <li @click="updateNickname">修改昵称</li>
+              <li @click="updatePassword">修改密码</li>
+            </ol>
+          </span>
           <span @click="logOut">退出登录</span>
         </li>
       </ul>
@@ -173,6 +180,32 @@
         <el-button type="primary" @click="sureClick">确 定 发 布</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="修改昵称" :visible.sync="dialogFormVisible3">
+      <el-form :model="form3">
+        <el-form-item label="新昵称" :label-width="formLabelWidth">
+          <el-input v-model="form3.newName" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="aSure">提交</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible4">
+      <el-form :model="form4">
+        <el-form-item label="旧密码" :label-width="formLabelWidth">
+          <el-input v-model="form4.oldPassword" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="新密码" :label-width="formLabelWidth">
+          <el-input v-model="form4.newPassword" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="bSure">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -185,6 +218,8 @@ import {
   typeAll,
   addProduct,
   uploadUserImg,
+  updateNickName,
+  updatePwd,
 } from "@/api";
 import ListContainer from "./ListContainer";
 import moment from "moment";
@@ -312,6 +347,17 @@ export default {
       },
       formLabelWidth2: "120px",
       ccc: [],
+      dialogFormVisible3: false,
+      form3: {
+        newName: "",
+      },
+
+      dialogFormVisible4: false,
+
+      form4: {
+        oldPassword: "",
+        newPassword: "",
+      },
     };
   },
   mounted() {
@@ -481,10 +527,14 @@ export default {
         let base64 = this.result;
         that.$refs.pic0.setAttribute("src", base64);
 
-        let obj = Object.assign({}, { token: that.token }, base64);
+        let obj = Object.assign({}, { token: that.token, base64 });
 
         uploadUserImg(obj).then((res) => {
-          console.log("res", res);
+          if (res.data.code == 200) {
+            alert(res.data.msg);
+          } else {
+            alert(res.data.msg);
+          }
         });
       };
 
@@ -492,10 +542,52 @@ export default {
         fileReader.readAsDataURL(file);
       }
     },
+    updateNickname() {
+      this.dialogFormVisible3 = true;
+    },
+    updatePassword() {
+      this.dialogFormVisible4 = true;
+    },
     // 退出登录
     logOut() {
       sessionStorage.removeItem("_tk");
       this.$router.push("/register");
+    },
+
+    aSure() {
+      this.dialogFormVisible3 = false;
+      let obj = Object.assign(
+        {},
+        { token: this.token, nickname: this.form3.newName }
+      );
+
+      updateNickName(obj).then((res) => {
+        if (res.data.code == 200) {
+          this.userMsg.nickName = this.form3.newName;
+        } else {
+          alert(res.data.msg);
+        }
+      });
+    },
+
+    bSure() {
+      this.dialogFormVisible4 = false;
+      let obj = Object.assign(
+        {},
+        { token: this.token },
+        {
+          oldPassword: this.form4.oldPassword,
+          newPassword: this.form4.newPassword,
+        }
+      );
+
+      updatePwd(obj).then((res) => {
+        if (res.data.code == 200) {
+          this.$router.push("/register");
+        } else {
+          alert(res.data.msg);
+        }
+      });
     },
   },
 };
@@ -518,7 +610,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid #eaeaea;
-      li {
+      > li {
         margin-right: 20px;
       }
       ._head {
@@ -543,9 +635,24 @@ export default {
             }
           }
         }
+        ._setting {
+          position: relative;
+          ._ol {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 1px solid skyblue;
+            display: none;
+          }
+        }
+        ._setting:hover {
+          ._ol {
+            display: block;
+          }
+        }
       }
       li:hover {
-        color: darkgoldenrod;
+        // color: darkgoldenrod;
       }
     }
   }

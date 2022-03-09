@@ -20,7 +20,16 @@ const routes = [{
     name: 'Pay',
     component: () =>
         import( /* webpackChunkName: "about" */ '../views/pay')
-}, {
+}, 
+
+// {
+//     path: '/gantt',
+//     name: 'Gantt',
+//     component: () =>
+//         import( /* webpackChunkName: "about" */ '../views/gantt')
+// },
+
+{
     path: "/",
     redirect: "/register"
 }]

@@ -36,4 +36,9 @@ export let addProduct = (params) => instance.post("/addProduct", params);
 // 9.修改用户头像
 export let uploadUserImg = (params) => instance.post("/uploadUserImg", params);
 
+// 10.修改用户昵称
+export let updateNickName = (params) => instance.post("/updateNickName", params);
+
+// 11.修改用户密码
+export let updatePwd = (params) => instance.post("/updatePwd", params);
 
