@@ -16,6 +16,7 @@ body {
     height: calc(~"100% - 40px");
     padding: 20px;
     .wrapper {
+      position: relative;
       height: 100%;
       padding: 0 100px;
     }

@@ -10,6 +10,12 @@ const routes = [{
     name: 'Home',
     component: () =>
         import( /* webpackChunkName: "about" */ '../views/Home')
+},
+{
+    path: '/login',
+    name: 'login',
+    component: () =>
+        import( /* webpackChunkName: "about" */ '../views/login')
 }, {
     path: '/register',
     name: 'Register',
@@ -20,7 +26,18 @@ const routes = [{
     name: 'Pay',
     component: () =>
         import( /* webpackChunkName: "about" */ '../views/pay')
-}, 
+},
+{
+    path: '/forgetPassword',
+    name: 'forgetPassword',
+    component: () =>
+        import( /* webpackChunkName: "about" */ '../views/forgetPassword')
+},
+
+
+
+
+
 
 // {
 //     path: '/gantt',

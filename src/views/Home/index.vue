@@ -551,7 +551,7 @@ export default {
     // 退出登录
     logOut() {
       sessionStorage.removeItem("_tk");
-      this.$router.push("/register");
+      this.$router.push("/login");
     },
 
     aSure() {

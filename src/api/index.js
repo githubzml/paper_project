@@ -42,3 +42,6 @@ export let updateNickName = (params) => instance.post("/updateNickName", params)
 // 11.修改用户密码
 export let updatePwd = (params) => instance.post("/updatePwd", params);
 
+// 12.找回密码
+
+export let findPassword = (params) => instance.post("/findPassword", params);

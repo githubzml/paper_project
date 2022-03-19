@@ -131,7 +131,7 @@
 
               <p class="tip a_login">
                 <span @click="registerStates = true">没有账号，立即注册</span
-                ><span>忘记密码?</span>
+                ><span @click="forgetPassword">忘记密码?</span>
               </p>
             </el-form>
           </div>
@@ -327,6 +327,10 @@ export default {
           }
         }
       );
+    },
+    // 忘记密码
+    forgetPassword() {
+      this.$router.push("/forgetPassword");
     },
   },
 };
