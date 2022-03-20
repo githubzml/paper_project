@@ -1,143 +1,81 @@
 <template>
-  <div class="_login">
+  <div class="bg _register">
     <header @click="goHome">
       <h2>社区二手交易网</h2>
       <h3>一个帮你省钱的网站</h3>
     </header>
 
-    <main>
-      <div class="left"></div>
-      <div class="right">
-        <!-- 注册 -->
-        <div class="_form" v-if="registerStates">
-          <div class="login_form_box">
-            <h1>省钱易</h1>
-            <el-form
-              ref="form"
-              :model="form"
-              label-width="80px"
-              :label-position="labelPosition"
+    <!-- 注册 -->
+    <div class="sss _form">
+      <div class="login_form_box">
+        <h1>省钱易</h1>
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="80px"
+          :label-position="labelPosition"
+        >
+          <el-form-item label="邮箱" class="_item">
+            <el-input
+              v-model="form.email"
+              placeholder="请输入邮箱"
+              @blur="blur_handle_email"
+            ></el-input>
+
+            <div class="error_msg" v-show="emailTipShow">邮箱格式不正确</div>
+          </el-form-item>
+
+          <el-form-item label="昵称" class="_item">
+            <el-input
+              v-model="form.nickname"
+              placeholder="昵称1-10个字符"
+              @blur="blur_handle_nickname"
+            ></el-input>
+
+            <div class="error_msg" v-show="nicknameTipShow">
+              1-10个字符 字母数字下划线汉字组合
+            </div>
+          </el-form-item>
+
+          <el-form-item label="密码" class="_item">
+            <el-input
+              v-model="form.password"
+              placeholder="密码1-16个字符"
+              show-password
+              @blur="blur_handle_password"
+            ></el-input>
+
+            <div class="error_msg" v-show="passwordTipShow">
+              6-16字符，数字字母下滑线组合且首字符为字母
+            </div>
+          </el-form-item>
+
+          <el-form-item label="验证码" class="_item">
+            <el-input
+              v-model="form.code"
+              placeholder="请输入六位验证码"
+              style="width: 150px"
+              @blur="blur_handle_code"
+            ></el-input>
+            <el-button
+              @click="getCode"
+              :disabled="isDisabled"
+              type="info"
+              style="margin-left: 10px; width: 140px"
+              >{{ txt }}</el-button
             >
-              <el-form-item label="邮箱" class="_item">
-                <el-input
-                  v-model="form.email"
-                  placeholder="请输入邮箱"
-                  @blur="blur_handle_email"
-                ></el-input>
+            <div class="error_msg" v-show="codeTipShow">验证码为6位数字</div>
+          </el-form-item>
 
-                <div class="error_msg" v-show="emailTipShow">
-                  邮箱格式不正确
-                </div>
-              </el-form-item>
-
-              <el-form-item label="昵称" class="_item">
-                <el-input
-                  v-model="form.nickname"
-                  placeholder="昵称1-10个字符"
-                  @blur="blur_handle_nickname"
-                ></el-input>
-
-                <div class="error_msg" v-show="nicknameTipShow">
-                  1-10个字符 字母数字下划线汉字组合
-                </div>
-              </el-form-item>
-
-              <el-form-item label="密码" class="_item">
-                <el-input
-                  v-model="form.password"
-                  placeholder="密码1-16个字符"
-                  show-password
-                  @blur="blur_handle_password"
-                ></el-input>
-
-                <div class="error_msg" v-show="passwordTipShow">
-                  6-16字符，数字字母下滑线组合且首字符为字母
-                </div>
-              </el-form-item>
-
-              <el-form-item label="验证码" class="_item">
-                <el-input
-                  v-model="form.code"
-                  placeholder="请输入六位验证码"
-                  style="width: 150px"
-                  @blur="blur_handle_code"
-                ></el-input>
-                <el-button
-                  @click="getCode"
-                  :disabled="isDisabled"
-                  type="info"
-                  style="margin-left: 10px; width: 140px"
-                  >{{ txt }}</el-button
-                >
-                <div class="error_msg" v-show="codeTipShow">
-                  验证码为6位数字
-                </div>
-              </el-form-item>
-
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  @click="onRegister"
-                  style="width: 100%"
-                  >注册</el-button
-                >
-              </el-form-item>
-              <p class="tip" @click="registerStates = false">
-                已有账号，立即登录
-              </p>
-            </el-form>
-          </div>
-        </div>
-        <!-- 登录 -->
-        <div class="_form" v-else>
-          <div class="login_form_box">
-            <h1>省钱易</h1>
-            <el-form
-              ref="form"
-              :model="form"
-              label-width="80px"
-              :label-position="labelPosition"
+          <el-form-item>
+            <el-button type="primary" @click="onRegister" style="width: 100%"
+              >注册</el-button
             >
-              <el-form-item label="邮箱" class="_item">
-                <el-input
-                  v-model="form.email"
-                  placeholder="请输入邮箱"
-                  @blur="blur_handle_email"
-                ></el-input>
-
-                <div class="error_msg" v-show="emailTipShow">
-                  邮箱格式不正确
-                </div>
-              </el-form-item>
-
-              <el-form-item label="密码" class="_item">
-                <el-input
-                  v-model="form.password"
-                  placeholder="密码1-16个字符"
-                  show-password
-                  @blur="blur_handle_password"
-                ></el-input>
-
-                <div class="error_msg" v-show="passwordTipShow">
-                  6-16字符，数字字母下滑线组合且首字符为字母
-                </div>
-              </el-form-item>
-
-              <el-form-item>
-                <el-button type="primary" @click="onLogin" style="width: 100%"
-                  >登录</el-button
-                >
-              </el-form-item>
-
-              <p class="tip a_login">
-                <span @click="registerStates = true">没有账号，立即注册</span
-                ><span @click="forgetPassword">忘记密码?</span>
-              </p>
-            </el-form>
-          </div>
-        </div>
+          </el-form-item>
+          <p class="tip" @click="aLogin">已有账号，立即登录</p>
+        </el-form>
       </div>
-    </main>
+    </div>
 
     <footer>
       <ul>
@@ -152,7 +90,7 @@
 // 第一种方式
 // import axios from "axios";
 // 第二种方式 接口统一管理
-import { login, testData, register, code } from "@/api";
+import { testData, register, code } from "@/api";
 
 import ValidForm from "@/utils";
 
@@ -187,8 +125,6 @@ export default {
       nicknameTipShow: false,
       passwordTipShow: false,
       codeTipShow: false,
-
-      registerStates: true,
     };
   },
   mounted() {
@@ -293,7 +229,6 @@ export default {
       register(this.form).then((res) => {
         let { code, msg } = res.data;
         if (code == 1) {
-          this.registerStates = false;
           for (let key in this.form) {
             this.form[key] = "";
           }
@@ -303,30 +238,8 @@ export default {
       });
     },
 
-    onLogin() {
-      if (!this.form.email || !this.form.password) {
-        alert("请完善表单信息");
-        return;
-      }
-
-      if (this.emailTipShow || this.passwordTipShow) {
-        alert("请正确填写表单信息");
-        return;
-      }
-
-      login({ email: this.form.email, password: this.form.password }).then(
-        (res) => {
-          let { code, msg, token } = res.data;
-          if (code == 1) {
-            console.log("token", token);
-
-            sessionStorage.setItem("_tk", token);
-            this.$router.push({ name: "Home" });
-          } else {
-            alert(msg);
-          }
-        }
-      );
+    aLogin() {
+      this.$router.push("/login");
     },
     // 忘记密码
     forgetPassword() {
@@ -337,7 +250,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-._login {
+._register {
+  position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -359,55 +273,35 @@ export default {
     color: aqua;
   }
 
-  main {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    height: calc(~"100% - 120px");
-    .left {
-      width: 100%;
-      height: 400px;
-      // background: url("~@/assets/images/login/社区.jpg") center center no-repeat;
-      background-size: cover;
-    }
-    .right {
-      position: absolute;
-      right: 0;
-      top: 20%;
-      background: #53c9c9;
-      border-radius: 10px;
-      ._form {
-        width: 400px;
-        opacity: 0.9;
-        .login_form_box {
-          padding: 20px 10px 0 10px;
-          h1 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            text-align: center;
-          }
-          ._item {
-            position: relative;
-            .error_msg {
-              position: absolute;
-              top: 32px;
-              left: 0;
+  ._form {
+    height: 400px;
+    opacity: 0.9;
+    .login_form_box {
+      padding: 20px 10px 0 10px;
+      h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      ._item {
+        position: relative;
+        .error_msg {
+          position: absolute;
+          top: 32px;
+          left: 0;
 
-              color: #e4393c;
-            }
-          }
-        }
-        .tip {
-          text-align: right;
-          padding-bottom: 10px;
-          cursor: pointer;
-        }
-        .a_login {
-          display: flex;
-          justify-content: space-between;
+          color: #e4393c;
         }
       }
+    }
+    .tip {
+      text-align: right;
+      padding-bottom: 10px;
+      cursor: pointer;
+    }
+    .a_login {
+      display: flex;
+      justify-content: space-between;
     }
   }
   footer {

@@ -45,3 +45,7 @@ export let updatePwd = (params) => instance.post("/updatePwd", params);
 // 12.找回密码
 
 export let findPassword = (params) => instance.post("/findPassword", params);
+
+// 13.查询商品
+export let findCommodity = (params) => instance.post("/findCommodity", params);
+

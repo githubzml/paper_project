@@ -40,6 +40,7 @@
         <el-input
           v-model="searchContent"
           placeholder="请输入内容"
+          style="width: 300px"
           :round="false"
         ></el-input>
         <el-button plain :round="false" @click="searchClick">搜索</el-button>
@@ -89,6 +90,18 @@
         <div class="right_bottom"></div>
       </section>
     </main>
+
+    <section>
+      <div>
+        <dl v-for="(item, index) in listArr" :key="index">
+          <dt><img :src="item.pimg" alt="" /></dt>
+          <dd>{{ item.pname }}</dd>
+          <dd>{{ item.desc }}</dd>
+          <dd>{{ item.region }}</dd>
+          <dd>{{ item.price }}</dd>
+        </dl>
+      </div>
+    </section>
     <el-button type="info" @click="infoBtn">发布按钮</el-button>
     <!-- 弹框 -->
     <el-dialog title="发布商品类型" :visible.sync="dialogFormVisible">
@@ -220,6 +233,7 @@ import {
   uploadUserImg,
   updateNickName,
   updatePwd,
+  findCommodity,
 } from "@/api";
 import ListContainer from "./ListContainer";
 import moment from "moment";
@@ -358,6 +372,8 @@ export default {
         oldPassword: "",
         newPassword: "",
       },
+
+      listArr: [],
     };
   },
   mounted() {
@@ -380,6 +396,14 @@ export default {
         this.userMsg.headImg = result[0].url;
       } else {
         console.log("res", res.data);
+      }
+    });
+
+    findCommodity({ token: this.token }).then((res) => {
+      let { code, result } = res.data;
+      if (code == 200) {
+        this.listArr = result;
+      } else {
       }
     });
   },

@@ -1,6 +1,6 @@
 <template>
-  <div class="_form">
-    <div class="login_form_box">
+  <div class="bg _forget">
+    <div class="sss login_form_box">
       <h1>找回密码</h1>
       <el-form
         ref="form"
@@ -161,21 +161,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-._form {
-  width: 400px;
-  //   height: 400px;
+._forget {
+  position: relative;
   opacity: 0.9;
-
-  background: #53c9c9;
-  border-radius: 10px;
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   .login_form_box {
+    height: 320px;
     padding: 20px 10px 0 10px;
-    margin: 10px;
     h1 {
       font-size: 22px;
       margin-bottom: 20px;
