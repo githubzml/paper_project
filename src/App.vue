@@ -5,6 +5,8 @@
 </template>
 
 <style lang="less">
+// #409EFF 主题颜色
+
 html,
 body {
   width: 100%;

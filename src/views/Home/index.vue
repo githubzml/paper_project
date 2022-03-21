@@ -5,21 +5,21 @@
       <ul>
         <li>省钱易，好逛又好玩</li>
         <li class="_head">
-          {{ userMsg.nickName }}
-          <p>
+          <span class="ml10">用户名：{{ userMsg.nickName }}</span>
+          <p class="ml10 cp" title="修改用户头像">
             <img :src="userMsg.headImg" alt="" ref="pic0" />
-            <label class="_headimg"
+            <label class="_headimg cp"
               ><input type="file" @change="updateHeadImg" ref="s0"
             /></label>
           </p>
-          <span class="_setting"
+          <span class="ml10 cp _setting"
             >设置
             <ol class="_ol">
               <li @click="updateNickname">修改昵称</li>
               <li @click="updatePassword">修改密码</li>
             </ol>
           </span>
-          <span @click="logOut">退出登录</span>
+          <span class="ml10 cp" @click="logOut">退出登录</span>
         </li>
       </ul>
     </header>
@@ -663,16 +663,33 @@ export default {
           position: relative;
           ._ol {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 100px;
             border: 1px solid skyblue;
             display: none;
+            z-index: 1;
+            background-color: #409eff;
+            left: -35px;
+            top: 18px;
+            li {
+              height: 30px;
+              line-height: 30px;
+              text-align: center;
+            }
+            li:hover {
+              color: darkgoldenrod;
+            }
           }
         }
         ._setting:hover {
           ._ol {
             display: block;
           }
+        }
+        .ml10 {
+          margin-left: 10px;
+        }
+        .cp {
+          cursor: pointer;
         }
       }
       li:hover {
