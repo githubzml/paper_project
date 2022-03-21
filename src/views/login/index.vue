@@ -49,6 +49,7 @@
 
 <script>
 import { login } from "@/api";
+import ValidForm from "@/utils";
 export default {
   data() {
     return {
@@ -106,7 +107,7 @@ export default {
             console.log("token", token);
 
             sessionStorage.setItem("_tk", token);
-            this.$router.push({ name: "Home" });
+            this.$router.push("/home/amain");
           } else {
             alert(msg);
           }

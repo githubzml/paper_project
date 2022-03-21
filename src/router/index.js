@@ -9,30 +9,90 @@ const routes = [{
     path: '/home',
     name: 'Home',
     component: () =>
-        import( /* webpackChunkName: "about" */ '../views/Home')
+        import( /* webpackChunkName: "about" */ '../views/Home'),
+    children: [
+        // 搜索
+        {
+            path: 'search',
+            name: 'search',
+            component: () =>
+                import('../views/Home/search')
+        },
+
+        // 主页
+        {
+            path: 'amain',
+            name: 'amain',
+            component: () =>
+                import('../views/Home/Main')
+        },
+
+        // 商品清单
+        {
+            path: 'commoditylist',
+            name: 'commodityList',
+            component: () =>
+                import('../views/Home/commodityList')
+        },
+
+        // 网站公告
+        {
+            path: 'websiteannouncement',
+            name: 'websiteAnnouncement',
+            component: () =>
+                import('../views/Home/websiteAnnouncement')
+        },
+
+        // 关于我们
+        {
+            path: 'aboutus',
+            name: 'aboutUs',
+            component: () =>
+                import('../views/Home/aboutus')
+        },
+
+        // 爱心公益
+        {
+            path: 'welfare',
+            name: 'welfare',
+            component: () =>
+                import('../views/Home/welfare')
+        },
+
+        // 商品详情页
+        {
+            path: 'detail',
+            name: 'detail',
+            component: () =>
+                import('../views/Home/detail')
+        },
+    ]
 },
 {
     path: '/login',
     name: 'login',
     component: () =>
-        import( /* webpackChunkName: "about" */ '../views/login')
+        import('../views/login')
 }, {
     path: '/register',
     name: 'Register',
     component: () =>
-        import( /* webpackChunkName: "about" */ '../views/Register')
+        import('../views/Register')
 }, {
     path: '/pay',
     name: 'Pay',
     component: () =>
-        import( /* webpackChunkName: "about" */ '../views/pay')
+        import('../views/pay')
 },
 {
     path: '/forgetPassword',
     name: 'forgetPassword',
     component: () =>
-        import( /* webpackChunkName: "about" */ '../views/forgetPassword')
+        import('../views/forgetPassword')
 },
+
+
+
 
 
 
