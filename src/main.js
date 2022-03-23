@@ -3,7 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import "swiper/css/swiper.css";
-import "@/style/change.less"
+import "@/style/change.less";
+// 引入swiper样式文件
+import 'swiper/css/swiper.min.css';
 
 import { Button, Input, Form, FormItem, Dialog, CheckboxGroup, Checkbox, Select, Option } from 'element-ui';
 
@@ -31,5 +33,8 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
+    beforeCreate() {  // 注册全局事件总线
+        Vue.prototype.$bus = this
+    },
     render: h => h(App)
 }).$mount('#app')

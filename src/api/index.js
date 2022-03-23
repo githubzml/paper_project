@@ -49,3 +49,12 @@ export let findPassword = (params) => instance.post("/findPassword", params);
 // 13.查询商品
 export let findCommodity = (params) => instance.post("/findCommodity", params);
 
+
+
+
+
+
+
+// ====================================================================
+// 获取首页数据
+export let getHomeImg = (params) => instance.get("/getHomeImg");

@@ -2,41 +2,35 @@
   <div class="_detail">
     <div class="_detail_top">
       <div class="_detail_top_left">
-        <img :src="arr[0].bigImg" alt="" />
-      </div>
-      <div class="_detail_top_center">
-        <i
-          class="el-icon-arrow-up"
-          style="font-size: 50px; font-weight: blod"
-        ></i>
-        <img :src="arr[0].img1" alt="" />
-        <img :src="arr[0].img2" alt="" />
-        <img :src="arr[0].img3" alt="" />
-        <img :src="arr[0].img4" alt="" />
-        <i
-          class="el-icon-arrow-down"
-          style="font-size: 50px; font-weight: blod"
-        ></i>
+        <zoom :imgUrl="arr[0].imgs[0]"></zoom>
+        <!-- <img :src="arr[0].bigImg" alt="" /> -->
+        <ImageList :imgUrls="arr[0].imgs"></ImageList>
       </div>
       <ul class="_detail_top_right">
-        <li>{{ arr[0].title }}</li>
-        <li>
+        <li class="_title">{{ arr[0].title }}</li>
+        <li class="_price">
           <span class="_xj">￥{{ arr[0].xianjia }}</span
           ><span class="_yj">￥{{ arr[0].yuanjia }}</span>
         </li>
         <li>
-          <span>地址：</span><span>{{ arr[0].yuanjia }}</span>
+          <span class="_t">地址</span><span>{{ arr[0].dizhi }}</span>
         </li>
 
         <li>
-          <span>标签：</span><span>{{ arr[0].biaoqian }}</span>
+          <span class="_t">标签</span><span>{{ arr[0].biaoqian }}</span>
         </li>
 
         <li>
-          <span>日期：</span><span>{{ arr[0].riqi }}</span>
+          <span class="_t">日期</span><span>{{ arr[0].riqi }}</span>
         </li>
 
-        <li>立即购买</li>
+        <li class="_gm">
+          <p>
+            <span @click="gwc('de')">-</span><span>{{ acount }}</span
+            ><span @click="gwc('in')">+</span>
+          </p>
+          <span class="_jrgwc" @click="toGwc">加入购物车</span>
+        </li>
       </ul>
     </div>
     <div class="_detail_bottom">
@@ -45,12 +39,23 @@
         <span @click="dc('c')" :class="[!active ? 'active' : '']">评论</span>
       </p>
       <div v-show="active">{{ arr[0].xiangqing }}</div>
-      <div v-show="!active">{{ arr[0].pinglun }}</div>
+      <div v-show="!active">
+        <p>{{ arr[0].pinglun }}</p>
+        <div class="gd" @click="gD = true" v-if="!gD">
+          <i class="el-icon-arrow-down">更多</i>
+        </div>
+        <p v-if="gD">更多啊</p>
+        <div class="gd" @click="gD = false" v-if="gD">
+          <i class="el-icon-arrow-up">收起</i>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import zoom from "@/components/Zoom/Zoom.vue";
+import ImageList from "@/components/ImageList/ImageList.vue";
 export default {
   data() {
     return {
@@ -71,32 +76,73 @@ export default {
       // 详情数据
       arr: [
         {
-          img1: require("../../../assets/images/detail_jpg/1.jpg"),
-          img2: require("../../../assets/images/detail_jpg/2.jpg"),
-          img3: require("../../../assets/images/detail_jpg/3.jpg"),
-          img4: require("../../../assets/images/detail_jpg/4.jpg"),
-          bigImg: require("../../../assets/images/detail_jpg/big.jpg"),
+          imgs: [
+            require("../../../assets/images/detail_jpg/1.jpg"),
+            require("../../../assets/images/detail_jpg/2.jpg"),
+            require("../../../assets/images/detail_jpg/3.jpg"),
+            require("../../../assets/images/detail_jpg/4.jpg"),
+            require("../../../assets/images/detail_jpg/big.jpg"),
+          ],
+          //   img1: require("../../../assets/images/detail_jpg/1.jpg"),
+          //   img2: require("../../../assets/images/detail_jpg/2.jpg"),
+          //   img3: require("../../../assets/images/detail_jpg/3.jpg"),
+          //   img4: require("../../../assets/images/detail_jpg/4.jpg"),
+          //   bigImg: require("../../../assets/images/detail_jpg/big.jpg"),
           title: "茶花 漱口杯 刷牙杯子",
           xianjia: "5.00",
           yuanjia: "12.00",
           dizhi: "1单元",
           biaoqian: "不议价，不还价",
           riqi: "2022-3-21",
-          xiangqing: "这是一些详情",
-          pinglun: "这厮一些评论",
+          xiangqing:
+            "3月21日国际田联诚信委员会通报俄罗斯女子竞走选手拉什马诺娃因为服用禁药被禁赛两年她在2012年伦敦奥运会20公里竞走比赛中打破世界纪录并获得的金牌被取消获得银牌的另外一位俄罗斯名将卡尼斯金娜在2015年的样品重检中被查出阳性也被取消了奖牌这样中国选手递补伦敦奥运女子竞走金银铜牌原本铜牌得主切阳什姐此前已经递补到银牌此次再进一步递补为金牌刘虹和吕秀芝递补为银牌和铜牌",
+
+          pinglun:
+            "3月21日国际田联诚信委员会通报俄罗斯女子竞走选手拉什马诺娃因为服用禁药被禁赛两年她在2012年伦敦奥运会20公里竞走比赛中打破世界纪录并获得的金牌被取消获得银牌的另外一位俄罗斯名将卡尼斯金娜在2015年的样品重检中被查出阳性也被取消了奖牌这样中国选手递补伦敦奥运女子竞走金银铜牌原本铜牌得主切阳什姐此前已经递补到银牌此次再进一步递补为金牌刘虹和吕秀芝递补为银牌和铜牌3月21日国际田联诚信委员会通报俄罗斯女子竞走选手拉什马诺娃因为服用禁药被禁赛两年她在2012年伦敦奥运会20公里竞走比赛中打破世界纪录并获得的金牌被取消获得银牌的另外一位俄罗斯名将卡尼斯金娜在2015年的样品重检中被查出阳性也被取消了奖牌这样中国选手递补伦敦奥运女子竞走金银铜牌原本铜牌得主切阳什姐此前已经递补到银牌此次再进一步递补为金牌刘虹和吕秀芝递补为银牌和铜牌",
         },
       ],
 
       crr: [{ shoujiaren: "", shoujihao: "", shoujiandizhi: "" }],
       active: true,
+      count: 1,
+      gD: false,
     };
   },
-  mounted() {
-    console.log(111, this.$route.params);
+  components: {
+    zoom,
+    ImageList,
   },
+  mounted() {},
   methods: {
+    //   详情/评论
     dc(params) {
       params == "d" ? (this.active = true) : (this.active = false);
+    },
+    // 加加 减减
+    gwc(params) {
+      if (params == "de") {
+        if (this.count == 1) {
+          this.count = 1;
+        } else {
+          this.count--;
+        }
+      } else {
+        if (this.count == 3) {
+          this.count = 3;
+        } else {
+          this.count++;
+        }
+      }
+      this.$store.dispatch("ccc", this.count);
+    },
+    // 跳转购物车页面
+    toGwc() {
+      this.$router.push("/shopping");
+    },
+  },
+  computed: {
+    acount() {
+      return this.$store.state.count;
     },
   },
 };
@@ -108,26 +154,39 @@ export default {
   height: 300px;
   margin: 0 auto;
   ._detail_top {
-    height: 350px;
+    height: 400px;
     display: flex;
     ._detail_top_left {
       margin-right: 10px;
     }
 
-    ._detail_top_center {
+    ._detail_top_right {
       display: flex;
       flex-direction: column;
-      img {
-        margin-bottom: 10px;
+      justify-content: space-between;
+      margin-left: 20px;
+      li {
+        > ._t {
+          background-color: #409eff;
+          border-radius: 10px;
+          padding: 5px;
+        }
+        ._jrgwc {
+          display: inline-block;
+          background-color: rgb(95, 84, 64);
+          border-radius: 10px;
+          margin-left: 10px;
+          padding: 0 10px;
+          line-height: 50px;
+          cursor: pointer;
+        }
       }
-    }
-
-    ._detail_top_right {
-      h3 {
+      ._title {
         font-weight: bold;
-        font-size: 22px;
+        font-size: 18px;
       }
-      > p {
+
+      > ._price {
         ._xj {
           color: red;
           font-size: 18px;
@@ -135,6 +194,26 @@ export default {
         ._yj {
           text-decoration: line-through;
           font-size: 14px;
+        }
+      }
+
+      ._gm {
+        display: flex;
+        height: 50px;
+        user-select: none;
+        p {
+          span {
+            display: inline-block;
+            width: 20px;
+            height: 100%;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+          }
+          span:nth-of-type(2) {
+            padding: 0 10px;
+          }
         }
       }
     }
@@ -153,6 +232,11 @@ export default {
         color: rgb(83, 184, 159);
         border-bottom: 1px solid rgb(83, 184, 159);
       }
+    }
+    .gd {
+      text-align: center;
+      margin: 20px 0;
+      cursor: pointer;
     }
   }
 }

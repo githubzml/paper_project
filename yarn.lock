@@ -7456,7 +7456,7 @@
     "unquote" "~1.1.1"
     "util.promisify" "~1.0.0"
 
-"swiper@5":
+"swiper@^5.4.5":
   "integrity" "sha512-7QjA0XpdOmiMoClfaZ2lYN6ICHcMm72LXiY+NF4fQLFidigameaofvpjEEiTQuw3xm5eksG5hzkaRsjQX57vtA=="
   "resolved" "https://registry.npmjs.org/swiper/-/swiper-5.4.5.tgz"
   "version" "5.4.5"

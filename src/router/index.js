@@ -66,6 +66,13 @@ const routes = [{
             component: () =>
                 import('../views/Home/detail')
         },
+        // 购物车
+        {
+            path: 'gocar',
+            name: 'gocar',
+            component: () =>
+                import('../views/Home/gocar')
+        },
     ]
 },
 {
@@ -89,6 +96,12 @@ const routes = [{
     name: 'forgetPassword',
     component: () =>
         import('../views/forgetPassword')
+},
+{
+    path: '/shopping',
+    name: 'shopping',
+    component: () =>
+        import('../views/shopping')
 },
 
 
