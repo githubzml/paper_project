@@ -1,0 +1,98 @@
+{
+    "code": 200,
+    "message": "成功",
+    "data": {
+        "trademarkList": [
+            {
+                "tmId": 1,
+                "tmName": "小米"
+            },
+            {
+                "tmId": 6,
+                "tmName": "VIVO"
+            }
+        ],
+        "attrsList": [
+            {
+                "attrId": 37,
+                "attrValueList": [
+                    "Java",
+                    "C#"
+                ],
+                "attrName": "分类"
+            },
+            {
+                "attrId": 113,
+                "attrValueList": [
+                    "个位大佬不要乱删数据"
+                ],
+                "attrName": "跪求"
+            },
+            {
+                "attrId": 17436,
+                "attrValueList": [
+                    "不"
+                ],
+                "attrName": "比哦"
+            }
+        ],
+        "goodsList": [
+            {
+                "id": 6018,
+                "defaultImg": "http://47.93.148.192:8080/group1/M00/05/6A/rBHu8mI4dCmAWwhDAATeuts8ZAY312.jpg",
+                "title": "123",
+                "price": 333.0,
+                "createTime": null,
+                "tmId": null,
+                "tmName": null,
+                "category1Id": null,
+                "category1Name": null,
+                "category2Id": null,
+                "category2Name": null,
+                "category3Id": null,
+                "category3Name": null,
+                "hotScore": 0,
+                "attrs": null
+            },
+            {
+                "id": 1269,
+                "defaultImg": null,
+                "title": "123123",
+                "price": 0.0,
+                "createTime": null,
+                "tmId": null,
+                "tmName": null,
+                "category1Id": null,
+                "category1Name": null,
+                "category2Id": null,
+                "category2Name": null,
+                "category3Id": null,
+                "category3Name": null,
+                "hotScore": 0,
+                "attrs": null
+            },
+            {
+                "id": 5802,
+                "defaultImg": "http://47.93.148.192:8080/group1/M00/05/4E/rBHu8mI1MGWAGOnzAAlMVq_ouYU301.jpg",
+                "title": "qaq",
+                "price": 12.0,
+                "createTime": null,
+                "tmId": null,
+                "tmName": null,
+                "category1Id": null,
+                "category1Name": null,
+                "category2Id": null,
+                "category2Name": null,
+                "category3Id": null,
+                "category3Name": null,
+                "hotScore": 0,
+                "attrs": null
+            }
+        ],
+        "total": 9,
+        "pageSize": 3,
+        "pageNo": 1,
+        "totalPages": 3
+    },
+    "ok": true
+}

@@ -58,3 +58,4 @@ export let findCommodity = (params) => instance.post("/findCommodity", params);
 // ====================================================================
 // 获取首页数据
 export let getHomeImg = (params) => instance.get("/getHomeImg");
+export let getHomeList = (params) => instance.get("/getHomeList");

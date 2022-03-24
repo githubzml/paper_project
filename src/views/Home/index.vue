@@ -305,13 +305,13 @@ export default {
   ._search {
     display: flex;
     justify-content: space-between;
-    margin: 20px 0;
+    margin: 10px 0;
     padding-left: 30px;
     li {
       display: flex;
       align-items: center;
       i {
-        font-size: 80px;
+        font-size: 40px;
         color: skyblue;
       }
     }
