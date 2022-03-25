@@ -2,18 +2,17 @@
   <div class="_detail">
     <div class="_detail_top">
       <div class="_detail_top_left">
-        <zoom :imgUrl="arr[0].imgs[0]"></zoom>
-        <!-- <img :src="arr[0].bigImg" alt="" /> -->
-        <ImageList :imgUrls="arr[0].imgs"></ImageList>
+        <zoom :imgUrl="detailImgs[0]"></zoom>
+        <ImageList :imgUrls="detailImgs"></ImageList>
       </div>
       <ul class="_detail_top_right">
-        <li class="_title">{{ arr[0].title }}</li>
+        <li class="_title">{{ detailObj.jianshu }}</li>
         <li class="_price">
-          <span class="_xj">￥{{ arr[0].xianjia }}</span
+          <span class="_xj">￥{{ detailObj.jiage }}</span
           ><span class="_yj">￥{{ arr[0].yuanjia }}</span>
         </li>
         <li>
-          <span class="_t">地址</span><span>{{ arr[0].dizhi }}</span>
+          <span class="_t">地址</span><span>{{ detailObj.region }}</span>
         </li>
 
         <li>
@@ -38,7 +37,7 @@
         <span @click="dc('d')" :class="[active ? 'active' : '']">详情</span>
         <span @click="dc('c')" :class="[!active ? 'active' : '']">评论</span>
       </p>
-      <div v-show="active">{{ arr[0].xiangqing }}</div>
+      <div v-show="active">{{ detailObj.desc }}</div>
       <div v-show="!active">
         <p>{{ arr[0].pinglun }}</p>
         <div class="gd" @click="gD = true" v-if="!gD">
@@ -56,6 +55,7 @@
 <script>
 import zoom from "@/components/Zoom/Zoom.vue";
 import ImageList from "@/components/ImageList/ImageList.vue";
+import { getDetail } from "../../../api";
 export default {
   data() {
     return {
@@ -106,13 +106,41 @@ export default {
       active: true,
       count: 1,
       gD: false,
+
+      detailObj: {},
+      detailImgs: [],
     };
   },
   components: {
     zoom,
     ImageList,
   },
-  mounted() {},
+  mounted() {
+    console.log(888);
+    // 带条件查询
+    getDetail({ id: this.$route.params.id, content: "" })
+      // getDetail({ id: 1, content: "" })
+      .then((result) => {
+        console.log(666);
+        let temp = [];
+
+        this.detailObj = result.data.result[0];
+
+        console.log(666, this.detailObj);
+
+        for (const key in this.detailObj) {
+          if (Object.hasOwnProperty.call(this.detailObj, key)) {
+            const element = this.detailObj[key];
+            if (key.includes("img")) {
+              temp.push(element);
+            }
+          }
+        }
+
+        this.detailImgs = temp; //获取图片列表
+      })
+      .catch((err) => {});
+  },
   methods: {
     //   详情/评论
     dc(params) {

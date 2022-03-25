@@ -3,6 +3,7 @@
     <div class="swiper-wrapper">
       <div class="swiper-slide" v-for="(item, index) in imgUrls" :key="index">
         <img
+          v-if="item"
           :src="item"
           :class="{ active: currentImg == index }"
           @click="handlerClick(item, index)"

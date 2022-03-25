@@ -16,12 +16,22 @@
 
     <section>
       <h1>全部</h1>
-
       <ul class="_title">
-        <li v-for="(item, index) in allList" :key="index">{{ item.type }}</li>
+        <li
+          v-for="(item, index) in allList"
+          :key="index"
+          @click="liClick(item, index)"
+          :class="[oactiveIndex == index ? 'active' : '']"
+        >
+          {{ item.type }}
+        </li>
       </ul>
       <div class="_list_box">
-        <dl v-for="(item, index) in listArr" :key="index">
+        <dl
+          v-for="(item, index) in listArr"
+          :key="index"
+          @click="dlClick(item)"
+        >
           <dt>
             <img :src="item.img1" alt="" />
           </dt>
@@ -39,7 +49,6 @@
 <script>
 import Swiper from "swiper";
 import { getHomeImg, getHomeList } from "@/api";
-import moment from "moment";
 export default {
   name: "amain",
   components: {},
@@ -47,15 +56,17 @@ export default {
     return {
       resultArr: [],
       allList: [
-        { type: "全部" },
-        { type: "书籍" },
-        { type: "数码" },
-        { type: "电器" },
-        { type: "箱/包" },
-        { type: "文具" },
-        { type: "其他" },
+        { type: "全部", enType: "" },
+        { type: "书籍", enType: "shu" },
+        { type: "数码", enType: "shuma" },
+        { type: "电器", enType: "dianqi" },
+        { type: "箱/包", enType: "bao" },
+        { type: "文具", enType: "wenju" },
+        { type: "其他", enType: "qita" },
       ],
+      tempListArr: [],
       listArr: [],
+      oactiveIndex: 0,
     };
   },
   mounted() {
@@ -79,11 +90,27 @@ export default {
     getHomeList().then((res) => {
       let { result } = res.data;
       this.listArr = result;
-
-      console.log(result);
+      this.tempListArr = result;
+      console.log("result", result);
     });
   },
-  methods: {},
+  methods: {
+    // 类型选择
+    liClick(p1, index) {
+      if (!p1.enType) {
+        this.listArr = this.tempListArr;
+      } else {
+        this.listArr = this.tempListArr.filter(
+          (item) => item.stype == p1.enType
+        );
+      }
+      this.oactiveIndex = index;
+    },
+    // 详情跳转
+    dlClick(p1) {
+      this.$router.push({ name: "detail", params: { id: p1.id } });
+    },
+  },
 };
 </script>
 
@@ -110,7 +137,21 @@ export default {
       margin-left: 60%;
       width: 40%;
       padding: 10px 5px;
-      background: #ccc;
+      li {
+        width: 60px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #ccc;
+        margin: 0 10px;
+      }
+      li:hover {
+        background-color: #409eff;
+      }
+      .active {
+        background-color: #409eff;
+      }
+      cursor: pointer;
     }
     ._list_box {
       display: flex;

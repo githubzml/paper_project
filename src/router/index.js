@@ -122,6 +122,12 @@ const routes = [{
 {
     path: "/",
     redirect: "/register"
+},
+{
+    path: '*',
+    name: '404',
+    component: () =>
+        import( /* webpackChunkName: "about" */ '../views/404.vue')
 }]
 
 const router = new VueRouter({
