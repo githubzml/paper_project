@@ -1,7 +1,8 @@
 <template>
   <div class="_settlement">
     <h3>
-      全部商品<span>{{ bcount }}</span>
+      全部商品
+      <!-- <span>{{ bcount }}</span> -->
     </h3>
 
     <ul class="con1">
@@ -66,9 +67,12 @@ export default {
       isIndeterminate: true,
     };
   },
+  mounted() {
+    console.log(222, this.cGWCArr);
+  },
   computed: {
-    bcount() {
-      return this.$store.state.count;
+    cGWCArr() {
+      return this.$store.state.GWCArr;
     },
   },
   methods: {

@@ -2,7 +2,7 @@
   <div class="_home">
     <header>
       <ul>
-        <li>省钱易欢迎您！</li>
+        <li>社区换欢迎您！</li>
         <li class="_head">
           {{ userMsg.nickName }} <img :src="userMsg.headImg" alt="" />
         </li>
@@ -18,7 +18,7 @@
     <ul class="_search">
       <li>
         <i class="iconfont icon-gouwucheman"></i>
-        <span>省钱易</span>
+        <span>社区换</span>
       </li>
       <li>
         <el-input
@@ -110,7 +110,7 @@ export default {
         },
         {
           id: 3,
-          bc: "关注省钱易",
+          bc: "关注社区换",
         },
         {
           id: 4,

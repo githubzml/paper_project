@@ -331,7 +331,7 @@ export default {
   },
   methods: {
     toDetail(paramsId) {
-      this.$router.push({ name: "detail", params: { id: paramsId } });
+      this.$router.push({ name: "detail", query: { id: paramsId } });
     },
     // 商品添加
     infoBtn() {

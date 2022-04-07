@@ -1,5 +1,8 @@
 <template>
   <div class="_main">
+    <div class="_left">
+      <OLeft></OLeft>
+    </div>
     <div class="swiper-container swiper-main" ref="mySwiper">
       <div class="swiper-wrapper">
         <div
@@ -7,11 +10,17 @@
           v-for="(item, index) in resultArr"
           :key="index"
         >
-          <img :src="item.img" />
+          <router-link :to="{ path: 'detail', query: { id: item.id } }">
+            <img :src="item.img1" />
+          </router-link>
         </div>
       </div>
       <!-- 如果需要分页器 -->
       <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="_right">
+      <ORight></ORight>
     </div>
 
     <section>
@@ -47,11 +56,37 @@
 </template>
 
 <script>
+//产生包含最小值和最大值的随机数
+function RandomNum(Min, Max) {
+  var num = Min + Math.round(Math.random() * (Max - Min));
+  return num;
+}
+
+//产生不重复随机数（5—20   5个）
+//定义数组存储随机数
+// 取几个
+function getJg(c, d, n) {
+  var arr = [];
+  for (var i = 0; i < n; i++) {
+    arr[i] = RandomNum(c, d); // 调用上面封装好的方法
+    for (var j = 0; j < i; j++) {
+      //如果重复则 i-- 重新产生一个
+      if (arr[i] == arr[j]) {
+        i--;
+        break;
+      }
+    }
+  }
+  return arr;
+}
+
 import Swiper from "swiper";
-import { getHomeImg, getHomeList } from "@/api";
+import { getHomeList } from "@/api";
+import ORight from "@/components/MainRight";
+import OLeft from "@/components/MainLeft";
 export default {
   name: "amain",
-  components: {},
+  components: { OLeft, ORight },
   data() {
     return {
       resultArr: [],
@@ -70,9 +105,24 @@ export default {
     };
   },
   mounted() {
-    getHomeImg().then((res) => {
+    getHomeList().then((res) => {
       let { result } = res.data;
-      this.resultArr = result;
+      this.listArr = result;
+      this.tempListArr = result;
+
+      let aa = getJg(0, result.length, 3); //从0到几取3个
+
+      let tempArr = [];
+      for (let index = 0; index < result.length; index++) {
+        for (let i = 0; i < aa.length; i++) {
+          if (index == aa[i]) {
+            tempArr.push(result[index]);
+          }
+        }
+      }
+      console.log("result", tempArr, result);
+
+      this.resultArr = tempArr;
 
       this.$nextTick(() => {
         new Swiper(this.$refs.mySwiper, {
@@ -85,13 +135,6 @@ export default {
           },
         });
       });
-    });
-
-    getHomeList().then((res) => {
-      let { result } = res.data;
-      this.listArr = result;
-      this.tempListArr = result;
-      console.log("result", result);
     });
   },
   methods: {
@@ -108,7 +151,7 @@ export default {
     },
     // 详情跳转
     dlClick(p1) {
-      this.$router.push({ name: "detail", params: { id: p1.id } });
+      this.$router.push({ name: "detail", query: { id: p1.id } });
     },
   },
 };
@@ -116,13 +159,30 @@ export default {
 
 <style lang="less" scoped>
 ._main {
+  position: relative;
+  ._left {
+    position: absolute;
+    width: calc(~"(100% - 600px)/2");
+    height: 400px;
+    top: 0;
+    left: 0;
+  }
   .swiper-main {
-    width: 600px;
+    width: 580px;
     height: 400px;
     margin: 0 auto;
-    .img {
-      height: 400px;
+    border: 1px solid #ccc;
+    img {
+      height: 100%;
+      width: 100%;
     }
+  }
+  ._right {
+    position: absolute;
+    width: calc(~"(100% - 600px)/2");
+    height: 400px;
+    top: 0;
+    right: 0;
   }
   section {
     h1 {

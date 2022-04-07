@@ -1,9 +1,9 @@
 <template>
   <div class="_home">
     <header>
-      <!-- 省钱易 好逛好玩 -->
+      <!-- 社区换 好逛好玩 -->
       <ul>
-        <li>省钱易，好逛又好玩</li>
+        <li>社区换，好逛又好玩</li>
         <li class="_head">
           <span class="ml10">用户名：{{ userMsg.nickName }}</span>
           <p class="ml10 cp" title="修改用户头像">
@@ -27,7 +27,7 @@
     <ul class="_search">
       <li>
         <i class="iconfont icon-gouwucheman"></i>
-        <span>省钱易</span>
+        <span>社区换</span>
       </li>
       <li class="_nav fzb">
         <span @click="clickHome">首页</span>
@@ -80,7 +80,7 @@ export default {
         },
         {
           id: 3,
-          bc: "关注省钱易",
+          bc: "关注社区换",
         },
         {
           id: 4,
@@ -306,7 +306,8 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
-    padding-left: 30px;
+    padding: 0 0 10px 30px;
+    border-bottom: 1px solid #ccc;
     li {
       display: flex;
       align-items: center;

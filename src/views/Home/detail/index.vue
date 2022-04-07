@@ -9,23 +9,26 @@
         <li class="_title">{{ detailObj.jianshu }}</li>
         <li class="_price">
           <span class="_xj">￥{{ detailObj.jiage }}</span
-          ><span class="_yj">￥{{ arr[0].yuanjia }}</span>
+          ><span class="_yj ml10">￥{{ arr[0].yuanjia }}</span>
         </li>
         <li>
-          <span class="_t">地址</span><span>{{ detailObj.region }}</span>
-        </li>
-
-        <li>
-          <span class="_t">标签</span><span>{{ arr[0].biaoqian }}</span>
+          <span class="_t">地址</span
+          ><span class="ml10">{{ detailObj.region }}</span>
         </li>
 
         <li>
-          <span class="_t">日期</span><span>{{ arr[0].riqi }}</span>
+          <span class="_t">标签</span
+          ><span class="ml10">{{ arr[0].biaoqian }}</span>
+        </li>
+
+        <li>
+          <span class="_t">日期</span
+          ><span class="ml10">{{ arr[0].riqi }}</span>
         </li>
 
         <li class="_gm">
           <p>
-            <span @click="gwc('de')">-</span><span>{{ acount }}</span
+            <span @click="gwc('de')">-</span><span>{{ count }}</span
             ><span @click="gwc('in')">+</span>
           </p>
           <span class="_jrgwc" @click="toGwc">加入购物车</span>
@@ -55,7 +58,7 @@
 <script>
 import zoom from "@/components/Zoom/Zoom.vue";
 import ImageList from "@/components/ImageList/ImageList.vue";
-import { getDetail } from "../../../api";
+import { getDetail, updateDetailCount } from "../../../api";
 export default {
   data() {
     return {
@@ -116,17 +119,13 @@ export default {
     ImageList,
   },
   mounted() {
-    console.log(888);
     // 带条件查询
-    getDetail({ id: this.$route.params.id, content: "" })
+    getDetail({ id: this.$route.query.id, content: "" })
       // getDetail({ id: 1, content: "" })
       .then((result) => {
-        console.log(666);
         let temp = [];
 
         this.detailObj = result.data.result[0];
-
-        console.log(666, this.detailObj);
 
         for (const key in this.detailObj) {
           if (Object.hasOwnProperty.call(this.detailObj, key)) {
@@ -161,16 +160,60 @@ export default {
           this.count++;
         }
       }
-      this.$store.dispatch("ccc", this.count);
     },
     // 跳转购物车页面
     toGwc() {
-      this.$router.push("/shopping");
+      // 记录商品 件数
+      this.$store.dispatch("lll", {
+        id: this.$route.params.id,
+        count: this.count,
+      });
+
+      let arr = [...this.bGWCArr];
+
+      if (!arr.length) {
+        arr.push({ id: this.$route.params.id, count: this.count });
+      } else {
+        let anew = true; //是否是新类型
+        for (let index = 0; index < arr.length; index++) {
+          const element = arr[index];
+          if (element.id && element.id == this.$route.params.id) {
+            element = Object.assign(
+              {},
+              { id: this.$route.params.id, count: this.count }
+            );
+            anew = false;
+          }
+        }
+
+        if (anew) {
+          arr.push({ id: this.$route.params.id, count: this.count });
+        }
+      }
+
+      this.$store.dispatch("allArr", arr);
+
+      // console.log(222, arr);
+
+      // console.log(111, this.bGWCArr);
+
+      // 更新接口
+      updateDetailCount({ id: this.$route.params.id, count: this.count }).then(
+        (res) => {
+          console.log(333, res.data);
+        }
+      );
+
+      // 如果当前ID 匹配到了 则数据覆盖 否则 将继续添加
+      // this.$router.push("/shopping");
     },
   },
   computed: {
     acount() {
-      return this.$store.state.count;
+      return this.$store.state.aObj;
+    },
+    bGWCArr() {
+      return this.$store.state.GWCArr;
     },
   },
 };

@@ -8,7 +8,7 @@
     <!-- 注册 -->
     <div class="sss _form">
       <div class="login_form_box">
-        <h1>省钱易</h1>
+        <h1>社区换</h1>
         <el-form
           ref="form"
           :model="form"
@@ -77,12 +77,12 @@
       </div>
     </div>
 
-    <footer>
+    <!-- <footer>
       <ul>
         <li v-for="(item, index) in links" :key="index">{{ item }}</li>
       </ul>
       <p>{{ copy }}</p>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

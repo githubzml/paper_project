@@ -63,3 +63,6 @@ export let getHomeList = (params) => instance.get("/getHomeList");
 
 // 获取详情页数据
 export let getDetail = (params) => instance.post("/getDetail", params);
+// 更新详情页数据
+export let updateDetailCount = (params) => instance.post("/updateDetailCount", params);
+

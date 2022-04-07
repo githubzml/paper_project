@@ -2,7 +2,7 @@
   <!-- 登录 -->
   <div class="bg _login">
     <div class="sss login_form_box">
-      <h1>省钱易</h1>
+      <h1>社区换</h1>
       <el-form
         ref="form"
         :model="form"

@@ -56,8 +56,6 @@ export default {
   mounted() {
     // 1. 实现单击小图显示大图效果
     this.$bus.$on("get-image", (imgUrl) => {
-      console.log("imgUrl", imgUrl);
-      console.log(this.$refs);
       this.$nextTick(() => {
         this.$refs.img1.src = imgUrl;
         this.$refs.img2.src = imgUrl;
