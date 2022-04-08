@@ -137,6 +137,8 @@ export default {
         }
 
         this.detailImgs = temp; //获取图片列表
+
+        this.count = this.detailObj.scount;
       })
       .catch((err) => {});
   },
@@ -165,29 +167,29 @@ export default {
     toGwc() {
       // 记录商品 件数
       this.$store.dispatch("lll", {
-        id: this.$route.params.id,
+        id: this.$route.query.id,
         count: this.count,
       });
 
       let arr = [...this.bGWCArr];
 
       if (!arr.length) {
-        arr.push({ id: this.$route.params.id, count: this.count });
+        arr.push({ id: this.$route.query.id, count: this.count });
       } else {
         let anew = true; //是否是新类型
         for (let index = 0; index < arr.length; index++) {
           const element = arr[index];
-          if (element.id && element.id == this.$route.params.id) {
+          if (element.id && element.id == this.$route.query.id) {
             element = Object.assign(
               {},
-              { id: this.$route.params.id, count: this.count }
+              { id: this.$route.query.id, count: this.count }
             );
             anew = false;
           }
         }
 
         if (anew) {
-          arr.push({ id: this.$route.params.id, count: this.count });
+          arr.push({ id: this.$route.query.id, count: this.count });
         }
       }
 
@@ -198,14 +200,16 @@ export default {
       // console.log(111, this.bGWCArr);
 
       // 更新接口
-      updateDetailCount({ id: this.$route.params.id, count: this.count }).then(
+      updateDetailCount({ id: this.$route.query.id, count: this.count }).then(
         (res) => {
-          console.log(333, res.data);
+          let { code, msg } = res.data;
+          if (code == 200) {
+            this.$router.push("/shopping");
+          } else {
+            alert(msg);
+          }
         }
       );
-
-      // 如果当前ID 匹配到了 则数据覆盖 否则 将继续添加
-      // this.$router.push("/shopping");
     },
   },
   computed: {
