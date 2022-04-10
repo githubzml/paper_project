@@ -14,7 +14,7 @@
           <el-checkbox-group v-model="checkList" @change="changeValue">
             <el-checkbox
               v-for="(item, index) in allList"
-              :label="item.type"
+              :label="item.en_type"
               :key="index"
             ></el-checkbox>
           </el-checkbox-group>
@@ -25,7 +25,12 @@
         <div class="right_top">
           <div>
             <span class="fzb">价格</span>
-            <el-select v-model="priceValue" clearable placeholder="请选择">
+            <el-select
+              v-model="priceValue"
+              clearable
+              placeholder="请选择"
+              @change="jgSelect"
+            >
               <el-option
                 v-for="(item, index) in optionsPrice"
                 :key="index"
@@ -37,7 +42,12 @@
           </div>
           <div>
             <span class="fzb">区域</span>
-            <el-select v-model="addressValue" clearable placeholder="请选择">
+            <el-select
+              v-model="addressValue"
+              clearable
+              placeholder="请选择"
+              @change="qySelect"
+            >
               <el-option
                 v-for="item in optionsAddress"
                 :key="item.value"
@@ -49,17 +59,23 @@
           </div>
         </div>
         <div class="right_bottom">
-          <dl
-            v-for="(item, index) in contentArr"
-            :key="index"
-            @click="toDetail(item.id)"
-          >
-            <dt><img :src="item.pimg" alt="" /></dt>
-            <dd>{{ item.pname }}</dd>
-            <dd>{{ item.desc }}</dd>
-            <dd>{{ item.region }}</dd>
-            <dd>{{ item.price }}</dd>
-          </dl>
+          <div class="_list_box" v-if="listArr.length">
+            <dl
+              v-for="(item, index) in listArr"
+              :key="index"
+              @click="dlClick(item)"
+            >
+              <dt>
+                <img :src="item.img1" alt="" />
+              </dt>
+              <dd class="_jj">
+                <span class="_js">{{ item.jianshu }}</span
+                ><span class="_jg">￥{{ item.jiage }}</span>
+              </dd>
+              <dd>{{ item.region }}</dd>
+            </dl>
+          </div>
+          <div class="no_data" v-else>暂无数据</div>
         </div>
       </section>
     </main>
@@ -203,6 +219,7 @@ import {
   addProduct,
   updateNickName,
   updatePwd,
+  getHomeList,
 } from "@/api";
 import moment from "moment";
 export default {
@@ -220,55 +237,56 @@ export default {
       searchContent: "",
 
       // 复选框
-      allList: [
-        {
-          id: 1,
-          type: "家用电器",
-          region: "1单元",
-          price: 199,
-          pimg: require("../../../assets/images/home_jpg/1电视/1.jpg"),
-        },
+      // allList: [
+      //   {
+      //     id: 1,
+      //     type: "家用电器",
+      //     region: "1单元",
+      //     price: 199,
+      //     pimg: require("../../../assets/images/home_jpg/1电视/1.jpg"),
+      //   },
 
-        {
-          id: 2,
-          type: "电脑 / 办公",
-          region: "2单元",
-          price: 299,
-        },
+      //   {
+      //     id: 2,
+      //     type: "电脑 / 办公",
+      //     region: "2单元",
+      //     price: 299,
+      //   },
 
-        {
-          id: 3,
-          type: "家居 / 家具 / 家装 / 厨具",
-          region: "3单元",
-          price: 399,
-        },
+      //   {
+      //     id: 3,
+      //     type: "家居 / 家具 / 家装 / 厨具",
+      //     region: "3单元",
+      //     price: 399,
+      //   },
 
-        {
-          id: 4,
-          type: "男装 / 女装 / 童装 / 内衣",
-          region: "4单元",
-          price: 499,
-        },
+      //   {
+      //     id: 4,
+      //     type: "男装 / 女装 / 童装 / 内衣",
+      //     region: "4单元",
+      //     price: 499,
+      //   },
 
-        {
-          id: 5,
-          type: "美妆 / 个护清洁 / 宠物",
-          region: "5单元",
-          price: 599,
-        },
+      //   {
+      //     id: 5,
+      //     type: "美妆 / 个护清洁 / 宠物",
+      //     region: "5单元",
+      //     price: 599,
+      //   },
 
-        {
-          id: 6,
-          type: "女鞋 / 箱包 / 钟表 / 珠宝",
-          region: "6单元",
-          price: 699,
-        },
+      //   {
+      //     id: 6,
+      //     type: "女鞋 / 箱包 / 钟表 / 珠宝",
+      //     region: "6单元",
+      //     price: 699,
+      //   },
 
-        {
-          id: 7,
-          type: "其他",
-        },
-      ],
+      //   {
+      //     id: 7,
+      //     type: "其他",
+      //   },
+      // ],
+      allList: [],
       checkList: ["家用电器"],
       // 下拉框
       optionsPrice: [
@@ -278,7 +296,7 @@ export default {
       ],
       priceValue: "1",
 
-      optionsAddress: [],
+      optionsAddress: [{ value: "全部", label: "全部" }],
 
       value: "",
       dialogFormVisible: false,
@@ -306,9 +324,10 @@ export default {
         newPassword: "",
       },
 
-      listArr: [],
+      listArr: [], //列表总数据
+      otherListArr: [], //一个变量 记录列表总数据
 
-      addressValue: "",
+      addressValue: "全部",
 
       isIndeterminate: true,
       checkAll: false,
@@ -327,9 +346,74 @@ export default {
     this.optionsAddress = cc(this.allList, "region");
 
     // 初始查询
-    this.searchClick();
+    // this.searchClick();
+    getHomeList().then((res) => {
+      let { result } = res.data;
+      let oarr = [];
+      let aarr = [];
+      for (let index = 0; index < result.length; index++) {
+        const element = result[index];
+        oarr.push({
+          en_type: element.en_type,
+          type: element.stype,
+        });
+        aarr.push({
+          value: element.region,
+          label: element.region,
+        });
+      }
+
+      this.allList = oarr; // 左侧类型
+      this.listArr = result; // 右侧列表
+      this.otherListArr = result; // 一个变量总数据
+
+      this.optionsAddress = [{ value: "全部", label: "全部" }, ...aarr];
+
+      console.log(111, result);
+      console.log(222, oarr);
+    });
   },
   methods: {
+    // 区域筛选
+    qySelect() {
+      console.log(this.addressValue);
+      if (!this.addressValue) {
+        this.listArr = this.otherListArr;
+        return;
+      }
+      if (this.addressValue == "全部") {
+        this.listArr = this.otherListArr;
+      } else {
+        this.listArr = this.otherListArr.filter(
+          (item) => item.region == this.addressValue
+        );
+      }
+    },
+    // 价格筛选
+    jgSelect() {
+      if (this.priceValue == 0) {
+        //根据价格值 从低到高排序
+        function sortId(a, b) {
+          return a.jiage - b.jiage;
+        }
+        this.listArr.sort(sortId);
+      } else if (this.priceValue == 1) {
+        function sortId(a, b) {
+          return a.id - b.id;
+        }
+        this.listArr.sort(sortId);
+      } else {
+        //根据价格值 从高到低排序
+        function sortId(a, b) {
+          return b.jiage - a.jiage;
+        }
+        this.listArr.sort(sortId);
+      }
+    },
+    // 详情跳转
+    dlClick(p1) {
+      this.$router.push({ name: "detail", query: { id: p1.id } });
+    },
     toDetail(paramsId) {
       this.$router.push({ name: "detail", query: { id: paramsId } });
     },
@@ -498,25 +582,29 @@ export default {
     },
 
     changeValue(value) {
+      //左侧选择 这里
+      
       // 商品排序 从高到低
 
       // 选择
 
       // 公告
 
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.allList.length;
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.allList.length;
+      // let checkedCount = value.length;
+      // this.checkAll = checkedCount === this.allList.length;
+      // this.isIndeterminate =
+      //   checkedCount > 0 && checkedCount < this.allList.length;
 
-      let tempArr = [];
-      value.forEach((aa) => {
-        tempArr = tempArr.concat(
-          this.allList.filter((item) => item.type == aa)
-        );
-      });
+      // let tempArr = [];
+      // value.forEach((aa) => {
+      //   tempArr = tempArr.concat(
+      //     this.allList.filter((item) => item.type == aa)
+      //   );
+      // });
 
-      this.contentArr = tempArr;
+      // this.contentArr = tempArr;
+
+      console.log(this.checkList);
     },
   },
 };
@@ -528,7 +616,7 @@ main {
   .left {
     padding-left: 2%;
     width: 18%;
-    border: 1px solid red;
+    border-right: 1px solid #ccc;
     .left_top {
       ._title {
         margin: 10px 0;
@@ -544,11 +632,65 @@ main {
   }
   .right {
     width: 80%;
-    border: 1px solid blue;
     .right_top {
       display: flex;
+      border-bottom: 1px solid #ccc;
       > div {
         margin: 10px;
+      }
+    }
+    .right_bottom {
+      ._list_box {
+        display: flex;
+        flex-wrap: wrap;
+        dl {
+          width: 250px;
+          height: 250px;
+          border: 1px solid #ccc;
+          margin: 20px;
+          display: flex;
+          flex-direction: column;
+          cursor: pointer;
+          dt {
+            width: 200px;
+            height: 200px;
+            margin: 5px 0 0 25px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          dd {
+            margin: 0 5px;
+          }
+          ._jj {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            ._js {
+              display: inline-block;
+              width: 180px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            ._jg {
+              color: red;
+            }
+          }
+        }
+        dl:hover {
+          border: 1px solid black;
+          transform: scale(1.1);
+          transition: all 0.2s linear;
+        }
+      }
+      .no_data {
+        height: 300px;
+        line-height: 300px;
+        font-weight: bold;
+        font-size: 40px;
+        text-align: center;
       }
     }
   }
@@ -585,5 +727,8 @@ main {
       }
     }
   }
+}
+.fzb {
+  margin-right: 10px;
 }
 </style>

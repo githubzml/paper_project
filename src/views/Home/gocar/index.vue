@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { getDetail } from "@/api";
+import { getDetail, startPay } from "@/api";
 const cityOptions = ["上海", "北京", "广州", "深圳"];
 export default {
   data() {
@@ -173,7 +173,12 @@ export default {
     },
     sure() {
       this.dialogFormVisible = false;
-      // let obj = 
+      startPay().then((res) => {
+        if (res.data.code == 200) {
+          location.href = res.data.paymentUrl;
+        }
+      });
+      // let obj =
       // console.log(111,this.forma);
     },
   },
