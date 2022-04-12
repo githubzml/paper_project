@@ -1,13 +1,13 @@
 <template>
-  <div>welfare</div>
+  <div>
+    welfare
+    <div>我要捐赠</div>
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>

@@ -66,3 +66,7 @@ export let getDetail = (params) => instance.post("/getDetail", params);
 // 更新详情页数据
 export let updateDetailCount = (params) => instance.post("/updateDetailCount", params);
 
+// 网站公告-查询求购信息
+export let queryQg = (params) => instance.get("/queryQg", { params });
+// 网站公告-求购信息
+export let getQg = (params) => instance.post("/getQg", params);

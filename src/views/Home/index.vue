@@ -30,11 +30,31 @@
         <span>社区换</span>
       </li>
       <li class="_nav fzb">
-        <span @click="clickHome">首页</span>
-        <span @click="clickCommodityList">商品清单</span>
-        <span @click="clickAnnouncement">网站公告</span>
-        <span @click="clickWelfare">爱心公益</span>
-        <span @click="clickUs">关于我们</span>
+        <span
+          @click="clickHome"
+          :class="[$route.name === 'amain' ? 'a_active' : '']"
+          >首页</span
+        >
+        <span
+          @click="clickCommodityList"
+          :class="[$route.name === 'commodityList' ? 'a_active' : '']"
+          >商品清单</span
+        >
+        <span
+          @click="clickAnnouncement"
+          :class="[$route.name === 'websiteAnnouncement' ? 'a_active' : '']"
+          >网站公告</span
+        >
+        <span
+          @click="clickWelfare"
+          :class="[$route.name === 'welfare' ? 'a_active' : '']"
+          >爱心公益</span
+        >
+        <span
+          @click="clickUs"
+          :class="[$route.name === 'aboutUs' ? 'a_active' : '']"
+          >关于我们</span
+        >
       </li>
       <li class="_cont">
         <el-input
@@ -43,9 +63,8 @@
           style="width: 300px"
           :round="false"
           @input="ainput"
-          @blur="isShow = false"
         ></el-input>
-        <ul class="_d" v-show="isShow">
+        <ul class="_d" v-show="isShow" @click="isShow = false">
           <li v-for="(item, index) in oArr" :key="index">
             <router-link :to="{ path: 'detail', query: { id: item.id } }">{{
               item.jianshu
@@ -243,6 +262,19 @@ export default {
       this.$router.push("/home/welfare");
     },
   },
+  watch: {
+    $route() {
+      // if(this.$route.name == "amain"){
+
+      // }else
+      // amain
+      // commodityList
+      // websiteAnnouncement
+      // aboutUs
+      // welfare
+      console.log(this.$route.name);
+    },
+  },
 };
 </script>
 
@@ -296,7 +328,7 @@ export default {
             border: 1px solid skyblue;
             display: none;
             z-index: 1;
-            background-color: #409eff;
+            background-color: darkgray;
             left: -35px;
             top: 18px;
             li {
@@ -349,6 +381,9 @@ export default {
         padding: 0 20px;
         cursor: pointer;
       }
+      .a_active {
+        color: #409eff;
+      }
     }
 
     li:nth-of-type(3) {
@@ -374,18 +409,23 @@ export default {
         left: 0;
         top: 40px;
         width: 300px;
-        height: 200px;
-        border: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
         background-color: antiquewhite;
         z-index: 1;
         li {
+          padding-left: 10px;
           height: 30px;
           line-height: 30px;
-          border-bottom: 1px solid;
+          border-bottom: 1px solid #ccc;
           cursor: pointer;
-        }
-        li:hover {
-          color: #ccc;
+          a {
+            color: #444;
+            text-decoration: none;
+          }
+          a:hover {
+            color: #409eff;
+          }
         }
       }
     }

@@ -220,6 +220,32 @@ export default {
       return this.$store.state.GWCArr;
     },
   },
+  watch: {
+    "$route.query"() {
+      // 带条件查询
+      getDetail({ id: this.$route.query.id, content: "" })
+        // getDetail({ id: 1, content: "" })
+        .then((result) => {
+          let temp = [];
+
+          this.detailObj = result.data.result[0];
+
+          for (const key in this.detailObj) {
+            if (Object.hasOwnProperty.call(this.detailObj, key)) {
+              const element = this.detailObj[key];
+              if (key.includes("img")) {
+                temp.push(element);
+              }
+            }
+          }
+
+          this.detailImgs = temp; //获取图片列表
+
+          this.count = this.detailObj.scount;
+        })
+        .catch((err) => {});
+    },
+  },
 };
 </script>
 

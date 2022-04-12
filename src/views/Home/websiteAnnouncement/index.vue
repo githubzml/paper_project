@@ -1,17 +1,22 @@
 <template>
   <div class="_websiteannouncement">
-    <!-- websiteannouncement -->
-    <!-- <el-button type="info" @click="infoBtn">发布按钮</el-button> -->
-    <!-- <el-button type="info" @click="productBtn">商品发布</el-button> -->
+    <el-button type="info" @click="qg">求购信息发布</el-button>
     <el-button type="info" @click="productBtn">商品信息发布</el-button>
-    <!-- <el-button type="info" @click="infoBtn">求购信息发布</el-button> -->
 
+    <div class="_qg">
+      <h2 class="b1">求购公告</h2>
+    </div>
+    <ul class="_qg_cont">
+      <li v-for="(item, index) in qgArr" :key="index">
+        <span>求购者：{{ item.nicheng }}</span>
+        <span>描述：{{ item.desc }}</span>
+        <span>发布时间：{{ new Date(item.createdAt).toLocaleString() }}</span>
+        <b title="查看详情" @click="xqClick(item.id)">>>></b>
+      </li>
+    </ul>
     <div class="_sp">
       <h2 class="b1">商品公告</h2>
     </div>
-    <!-- <div class="_qg">
-      <h2 class="b1">求购公告</h2>
-    </div> -->
 
     <el-dialog title="发布商品" :visible.sync="dialogFormVisible2">
       <el-form :model="form2">
@@ -98,11 +103,52 @@
         <el-button type="primary" @click="dialogSure">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="详细信息" :visible.sync="dialogFormVisible9">
+      <el-form :model="form9">
+        <el-form-item label="昵称" :label-width="formLabelWidth9">
+          <el-input v-model="form9.nicheng" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式" :label-width="formLabelWidth9">
+          <el-input v-model="form9.lianxi" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="求购描述" :label-width="formLabelWidth9">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="form9.desc"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="qgClick">确 定 发 布</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="求购者信息" :visible.sync="dialogFormVisible10">
+      <p>昵称：{{ xqObj.nicheng }}</p>
+      <p>描述：{{ xqObj.desc }}</p>
+      <p>电话：{{ xqObj.lianxi }}</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogFormVisible10 = false"
+          >关 闭</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { addType, typeAll, addProduct, findCommodity } from "@/api";
+import {
+  addType,
+  typeAll,
+  addProduct,
+  findCommodity,
+  queryQg,
+  getQg,
+} from "@/api";
 export default {
   data() {
     return {
@@ -113,6 +159,7 @@ export default {
         typeName: "",
       },
       dialogFormVisible2: false,
+
       formLabelWidth2: "120px",
       ccc: [],
       formLabelWidth: "120px",
@@ -127,6 +174,17 @@ export default {
       },
 
       carr: [],
+
+      dialogFormVisible9: false,
+      formLabelWidth9: "120px",
+      form9: {
+        nicheng: "",
+        lianxi: "",
+        desc: "",
+      },
+      qgArr: [],
+      dialogFormVisible10: false,
+      xqObj: {},
     };
   },
   mounted() {
@@ -137,6 +195,7 @@ export default {
       this.$router.push("/register");
       return;
     }
+    this.queryData();
   },
   methods: {
     dialogSure() {
@@ -162,6 +221,25 @@ export default {
     infoBtn() {
       // addType
       this.dialogFormVisible = true;
+    },
+    queryData() {
+      queryQg().then((res) => {
+        let { result } = res.data;
+        this.qgArr = result;
+        console.log("result", result);
+      });
+    },
+    // 求购信息发布
+    qg() {
+      this.dialogFormVisible9 = true;
+    },
+    xqClick(oid) {
+      this.dialogFormVisible10 = true;
+      queryQg({ id: oid }).then((res) => {
+        let { result } = res.data;
+        // this.qgArr = result;
+        this.xqObj = result[0];
+      });
     },
     // 商品发布
     productBtn() {
@@ -207,6 +285,13 @@ export default {
       }
     },
 
+    qgClick() {
+      this.dialogFormVisible9 = false;
+      getQg(this.form9).then((res) => {
+        this.queryData();
+      });
+    },
+
     // 确认发布
     sureClick() {
       this.dialogFormVisible2 = false;
@@ -240,9 +325,38 @@ export default {
 <style scoped lang="less">
 ._websiteannouncement {
   .b1 {
+    margin: 10px 0;
+    width: 150px;
     height: 30px;
     line-height: 30px;
-    border-bottom: 1px solid #ccc;
+    background-color: #ccc;
+    text-align: center;
+  }
+  ._qg {
+  }
+  ._qg_cont {
+    li {
+      position: relative;
+      display: flex;
+      height: 40px;
+      line-height: 40px;
+      border-bottom: 1px solid #ccc;
+      span {
+        display: inline-block;
+        width: 230px;
+        // background-color: #ddd;
+        margin-right: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      b {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>
