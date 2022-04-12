@@ -1,15 +1,35 @@
 <template>
-  <div>
-      aboutus
+  <div class="_aboutus">
+    <header>
+      <p>我们致力打造一个良好的社区二手平台</p>
+      <p>让用户收益，让商品使用率最大化</p>
+    </header>
+    <section>关于我们...</section>
+    <footer>电话：010-7654323</footer>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
+<style lang="less" scoped>
+._aboutus {
+  height: calc(~"100vh - 132px");
 
+  display: flex;
+  flex-direction: column;
+  header {
+    font-size: 40px;
+    text-align: center;
+  }
+  section {
+    padding: 20px 0;
+    flex: 1;
+  }
+  footer {
+    height: 40px;
+    text-align: center;
+  }
+}
 </style>

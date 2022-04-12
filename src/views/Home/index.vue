@@ -33,16 +33,25 @@
         <span @click="clickHome">首页</span>
         <span @click="clickCommodityList">商品清单</span>
         <span @click="clickAnnouncement">网站公告</span>
-        <span @click="clickUs">关于我们</span>
         <span @click="clickWelfare">爱心公益</span>
+        <span @click="clickUs">关于我们</span>
       </li>
-      <li>
+      <li class="_cont">
         <el-input
           v-model="searchContent"
           placeholder="请输入内容"
           style="width: 300px"
           :round="false"
+          @input="ainput"
+          @blur="isShow = false"
         ></el-input>
+        <ul class="_d" v-show="isShow">
+          <li v-for="(item, index) in oArr" :key="index">
+            <router-link :to="{ path: 'detail', query: { id: item.id } }">{{
+              item.jianshu
+            }}</router-link>
+          </li>
+        </ul>
         <el-button plain :round="false" @click="searchClick">搜索</el-button>
       </li>
     </ul>
@@ -52,7 +61,8 @@
 </template>
 
 <script>
-import { userinfo, findTypeDate, uploadUserImg, findCommodity } from "@/api";
+import { userinfo, findTypeDate, uploadUserImg, getHomeList } from "@/api";
+
 import moment from "moment";
 export default {
   name: "Home",
@@ -93,6 +103,9 @@ export default {
       ],
       token: "",
       searchContent: "",
+      isShow: false,
+      oArr: [],
+      otArr: [],
     };
   },
   mounted() {
@@ -118,19 +131,31 @@ export default {
       }
     });
 
-    findCommodity({ token: this.token }).then((res) => {
-      let { code, result } = res.data;
-      if (code == 200) {
-        this.listArr = result;
-      } else {
+    getHomeList().then((res) => {
+      let { result } = res.data;
+      let oarr = [];
+      for (let index = 0; index < result.length; index++) {
+        const element = result[index];
+        oarr.push({
+          jianshu: element.jianshu,
+          id: element.id,
+        });
       }
+      this.oArr = oarr;
+      this.otArr = oarr;
     });
   },
   methods: {
+    ainput() {
+      this.isShow = true;
+      this.oArr = this.otArr.filter((item) =>
+        item.jianshu.includes(this.searchContent)
+      );
+    },
     // 搜索
     searchClick() {
-      this.$router.push("/home/search");
-      return;
+      // this.$router.push("/home/search");
+      // return;
 
       // 每次查询几条数据
       let count = 10; //拿几条数据
@@ -339,6 +364,29 @@ export default {
       }
       .el-input__inner {
         border-radius: 0;
+      }
+    }
+
+    ._cont {
+      position: relative;
+      ._d {
+        position: absolute;
+        left: 0;
+        top: 40px;
+        width: 300px;
+        height: 200px;
+        border: 1px solid #ccc;
+        background-color: antiquewhite;
+        z-index: 1;
+        li {
+          height: 30px;
+          line-height: 30px;
+          border-bottom: 1px solid;
+          cursor: pointer;
+        }
+        li:hover {
+          color: #ccc;
+        }
       }
     }
   }
