@@ -70,3 +70,12 @@ export let updateDetailCount = (params) => instance.post("/updateDetailCount", p
 export let queryQg = (params) => instance.get("/queryQg", { params });
 // 网站公告-求购信息
 export let getQg = (params) => instance.post("/getQg", params);
+
+// 公益-查询公益信息
+export let getGy = (params) => instance.get("/getGy", { params });
+// 公益-修改公益信息
+export let updateGy = (params) => instance.post("/updateGy", params);
+// 公益-增加公益信息
+export let putGy = (params) => instance.post("/putGy", params);
+// 公益-删除公益信息
+export let delGy = (params) => instance.post("/delGy", params);
